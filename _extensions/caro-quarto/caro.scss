@@ -130,3 +130,21 @@ a {
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
+
+/* Bootstrap `.table` in main column — compact rows (variable dictionaries, etc.) */
+#quarto-document-content table.table {
+  th,
+  td {
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    line-height: 1.25;
+    vertical-align: top;
+  }
+
+  thead th {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+}
