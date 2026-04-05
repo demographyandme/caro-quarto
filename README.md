@@ -46,6 +46,13 @@ Site-specific SCSS (social icons, publication helpers, etc.) goes in a local `st
 
 ## Update
 
+| Context | What to run |
+|---------|-------------|
+| **Local** | `quarto render` in any consumer site: `pre_render.sh` copies from `CARO_QUARTO_SRC` into `_extensions/caro-quarto/` **when that env var is set** (recommended path: this repo’s `_extensions/caro-quarto/`). |
+| **GitHub Actions** | Consumer repos run `quarto update caro-quarto --no-prompt` then `quarto render` so CI pulls the latest extension from this repo without local paths. |
+
+Manual refresh without a full site render:
+
 ```bash
 quarto update caro-quarto
 ```
