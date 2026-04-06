@@ -39,7 +39,7 @@ The extension provides:
 
 | File | Role |
 |------|------|
-| `caro.scss` | SCSS defaults (design tokens) + common rules (typography, navbar, footer, sidebar, links, buttons) |
+| `caro.scss` | SCSS defaults (design tokens) + common rules (typography, navbar, footer, sidebar, links, buttons, tables) |
 | `fonts.html` | Google Fonts preconnect + stylesheet for all four typefaces |
 
 Site-specific SCSS (social icons, publication helpers, etc.) goes in a local `styles.scss` that layers on top. All `$variables` from `caro.scss` are available in subsequent SCSS files.

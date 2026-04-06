@@ -12,17 +12,18 @@ $font-family-monospace: "Courier Prime", "Courier New", monospace;
 $body-bg: #F9F8F6;
 $body-color: #2B2B2B;
 $link-color: #8c1d40;
-$link-hover-color: darken(#8c1d40, 12%);
+$link-hover-color: darken($link-color, 12%);
 
 $primary: #8c1d40;
 $secondary: #6b6b6b;
 $border-color: #dedad3;
+$accent-warm: #b5654a;
 
 $font-size-base: 1.15rem;
 $line-height-base: 1.65;
 $headings-font-family: "Libre Baskerville", Georgia, serif;
 $headings-font-weight: 400;
-$headings-color: #2B2B2B;
+$headings-color: $body-color;
 
 $navbar-bg: #F9F8F6;
 $navbar-fg: #2B2B2B;
@@ -52,6 +53,7 @@ h2 {
   line-height: 1.25;
   padding-bottom: 0.35rem;
   border-bottom: 1px solid $border-color;
+  border-bottom-color: $accent-warm;
   margin-top: 1.8rem;
 }
 
@@ -97,14 +99,11 @@ code, pre {
   border-left-color: $primary;
 }
 
-.callout-note {
-  border-left-color: $primary;
-}
-
 blockquote {
   border-left: 2px solid $primary;
+  border-left-color: $accent-warm;
   padding-left: 1.1rem;
-  background: rgba(140, 29, 64, 0.03);
+  background: rgba($accent-warm, 0.04);
   font-style: italic;
 }
 
@@ -135,16 +134,62 @@ a {
 #quarto-document-content table.table {
   th,
   td {
-    padding-top: 0.3rem;
-    padding-bottom: 0.3rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0.3rem 0.5rem;
     line-height: 1.25;
     vertical-align: top;
   }
 
   thead th {
-    padding-top: 0.35rem;
-    padding-bottom: 0.35rem;
+    padding: 0.35rem 0.5rem;
   }
+}
+
+#quarto-document-content > section.level2 {
+  margin-top: 3.5rem;
+}
+
+.references.hanging-indent .csl-entry {
+  padding-left: 0;
+  text-indent: 0;
+}
+
+.csl-entry {
+  margin-bottom: 1.1rem;
+}
+
+.dict-hero {
+  font-family: $font-family-serif;
+  margin-top: 1.8rem;
+  margin-bottom: 1.6rem;
+  line-height: 1.5;
+}
+
+.dict-hero .dict-word {
+  font-size: 1.55rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.dict-hero .dict-ipa {
+  font-weight: 300;
+  font-size: 1.1rem;
+  margin-left: 0.4em;
+  color: $secondary;
+}
+
+.dict-hero .dict-pos {
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1.05rem;
+  margin-left: 0.3em;
+  color: $secondary;
+}
+
+.dict-hero .dict-def {
+  display: block;
+  font-size: 1rem;
+  font-weight: 400;
+  margin-top: 0.15rem;
+  color: $body-color;
+  padding-left: 0.05em;
 }
