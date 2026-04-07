@@ -6,6 +6,7 @@ Shared visual identity for [demographyandme.com](https://www.demographyandme.com
 
 - **Body:** Crimson Pro (Garamond-class serif, screen-optimized)
 - **Headings:** Libre Baskerville
+- **Dict-hero:** Spectral (screen-first Old Style serif; dictionary entry blocks)
 - **UI/Nav:** Libre Franklin
 - **Mono:** Courier Prime
 - **Palette:** archival cream `#F9F8F6`, crimson accent `#8c1d40`, charcoal text `#2B2B2B`
@@ -40,7 +41,7 @@ The extension provides:
 | File | Role |
 |------|------|
 | `caro.scss` | SCSS defaults (design tokens) + common rules (typography, navbar, footer, sidebar, links, buttons, tables) |
-| `fonts.html` | Google Fonts preconnect + stylesheet for all four typefaces |
+| `fonts.html` | Google Fonts preconnect + stylesheet for all five typefaces |
 
 Site-specific SCSS (social icons, publication helpers, etc.) goes in a local `styles.scss` that layers on top. All `$variables` from `caro.scss` are available in subsequent SCSS files.
 
