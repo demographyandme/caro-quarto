@@ -1,0 +1,109 @@
+/* ── Reading frame vs text measure ─────────────────────────────────────────
+   "Wide frame, readable text" (the pattern Anthropic uses): the content band
+   is generous (--caro-wide-measure) so figures, data tables, and the hero feel
+   open, while running TEXT is held to a readable column (--caro-measure),
+   centred within the band — including ### subsections and short filter-note
+   blocks. Media (figures, tables, interactive #data, code output) is NOT in
+   the text-cap list, so it fills the band naturally — #data tables keep full
+   width with no special-casing. */
+.content {
+  max-width: var(--caro-wide-measure);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content > section > :is(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6),
+.content > section > section > :is(p, ul, ol, dl, blockquote, h3, h4, h5, h6),
+.content > section > div[class*="-table-notes"] > :is(p, ul, ol),
+.content > section :is(.phe-table-app, .phe-stage-table, .dtb-table-app),
+.content > p,
+.content > .dict-hero,
+.content .references,
+#title-block-header {
+  max-width: var(--caro-measure);
+  margin-inline: auto;
+}
+
+/* Research companions (body-classes: research-companion in site/_quarto.yml):
+   one measure column, flush left — same layout as migration / vaccine static
+   companions (standards §9). Interactive tables scroll inside the column. */
+body.research-companion .content {
+  max-width: var(--caro-measure);
+}
+
+body.research-companion .content > section > :is(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6),
+body.research-companion .content > section > section > :is(p, ul, ol, dl, blockquote, h3, h4, h5, h6),
+body.research-companion .content > section > div[class*="-table-notes"] > :is(p, ul, ol),
+body.research-companion .content > section :is(.phe-table-app, .phe-stage-table, .dtb-table-app),
+body.research-companion .content > p,
+body.research-companion .content > .dict-hero,
+body.research-companion .content .references,
+body.research-companion #title-block-header {
+  max-width: none;
+  margin-inline: 0;
+}
+
+/* Visual companions: wide content band for embedded p5 viewer; prose stays on measure. */
+body.visual-companion .content {
+  max-width: var(--caro-wide-measure);
+}
+
+body.visual-companion .content > section > :is(p, ul, ol, dl, blockquote, h2, h3, h4, h5, h6),
+body.visual-companion .content > section > section > :is(p, ul, ol, dl, blockquote, h3, h4, h5, h6),
+body.visual-companion .content > p,
+body.visual-companion .content > .dict-hero,
+body.visual-companion .content > .callout,
+body.visual-companion .content > section > .callout,
+body.visual-companion #title-block-header {
+  max-width: var(--caro-measure);
+  margin-inline: auto;
+}
+
+body.visual-companion .visual-companion-viewer {
+  max-width: none;
+  margin-inline: 0;
+}
+
+/* Prose/data tables (markdown pipe tables: `.table`) in visual companions align
+   with headings and body copy on --caro-measure — not the wide viewer band.
+   Long HMD/HFD metadata cells wrap instead of forcing a wider column. */
+body.visual-companion .content > section > table.table,
+body.visual-companion .content > section > section > table.table {
+  max-width: var(--caro-measure);
+  margin-inline: auto;
+  table-layout: fixed;
+  width: 100%;
+}
+
+body.visual-companion .content > section > table.table :is(th, td),
+body.visual-companion .content > section > section > table.table :is(th, td) {
+  overflow-wrap: anywhere;
+}
+
+/* Badge rows (companion-badges div): use raw HTML — lone markdown badge images become
+   <figure class="quarto-figure-center"> with alt text as <figcaption> (centered, duplicate). */
+body.visual-companion .content > .companion-badges {
+  max-width: var(--caro-measure);
+  margin-inline: auto;
+}
+
+body.research-companion .content > .companion-badges {
+  max-width: none;
+  margin-inline: 0;
+  margin-bottom: var(--space-md);
+}
+
+/* Any embedded viewer (sidebar + canvas) exceeds --caro-wide-measure and Quarto's
+   body-content grid column (≈ 802px). When a visual companion page contains a viewer,
+   widen main.content to span page-start/page-end so the iframe gets ~full page width
+   inside which the canvas can fill the space beside the sidebar. Generic by viewer
+   presence — no per-piece selector. */
+body.visual-companion .content:has(.visual-companion-viewer) {
+  max-width: var(--caro-visual-measure);
+  grid-column: page-start / page-end;
+  /* Global .content { margin-inline: auto } makes a grid item shrink to max-content
+     (~--caro-measure prose), so the iframe ends up the same width as body copy.
+     Fill the widened page band instead; prose children stay on measure inside. */
+  margin-inline: 0;
+  width: 100%;
+}

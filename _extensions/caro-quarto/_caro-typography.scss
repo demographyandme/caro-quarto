@@ -1,0 +1,64 @@
+/* ── Typographic refinement (Arno OpenType) ────────────────────────────────
+   The features that separate "a nice serif" from "typeset": old-style figures
+   in serif prose, lining/tabular figures in data tables, common ligatures,
+   true small caps for acronyms, and Arno's small-size optical cut for the
+   smallest serif text. */
+
+#quarto-document-content {
+  font-variant-numeric: oldstyle-nums proportional-nums;  // text figures in running prose
+  font-variant-ligatures: common-ligatures contextual;
+}
+
+#quarto-document-content p {
+  text-wrap: pretty;   // fewer widows/orphans (progressive enhancement)
+}
+
+/* Data tables (incl. companion interactive tables) want aligned lining figures. */
+#quarto-document-content table {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+/* True small caps (Arno) for acronyms — pandoc `[RGPS]{.smallcaps}` or <abbr>.
+   Small caps need a touch of tracking to breathe. */
+abbr,
+.smallcaps {
+  font-variant-caps: small-caps;
+  font-variant-numeric: oldstyle-nums;
+  letter-spacing: 0.02em;
+}
+abbr[title] {
+  text-decoration: none;
+  cursor: help;
+}
+
+/* Smallest serif text gets Arno's SmText optical cut (hand-drawn for small
+   sizes): footnotes and figure captions. */
+.footnotes,
+figure figcaption,
+.quarto-figure figcaption,
+.figure-caption {
+  font-family: $arno-smalltext;
+  letter-spacing: 0.006em;   // small text reads better with a touch more tracking
+}
+
+/* Opening quote of a blockquote hangs into the margin (Safari). */
+blockquote {
+  hanging-punctuation: first;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  letter-spacing: -0.006em;   // Arno old-style fit dislikes tight tracking (was -0.018 for Source)
+  text-wrap: balance;
+}
+
+#quarto-document-content {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+#quarto-document-content p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}

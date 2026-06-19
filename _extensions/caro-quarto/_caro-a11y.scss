@@ -1,0 +1,32 @@
+/* ── Respect reduced-motion preferences (WCAG 2.3.3, AAA) ─────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .project-card,
+  .project-card:hover,
+  .media-card,
+  .media-card:hover,
+  .media-card img {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ── Respect increased-contrast preferences ──────────────────────────────── */
+@media (prefers-contrast: more) {
+  a {
+    text-decoration-thickness: 1.5px;
+  }
+  h2 {
+    border-bottom-color: $body-color;
+  }
+  .navbar,
+  .nav-footer {
+    border-color: $secondary;
+  }
+  a:focus-visible,
+  .btn:focus-visible,
+  .skip-link:focus,
+  .project-card:focus-visible,
+  .media-card:focus-visible {
+    outline-width: 3px;
+  }
+}

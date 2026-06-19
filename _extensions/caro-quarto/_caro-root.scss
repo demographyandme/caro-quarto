@@ -1,0 +1,43 @@
+:root {
+  /* ── Master type scale ────────────────────────────────────────────────────
+     Every size + gap is in rem, so this single value scales the WHOLE site
+     uniformly — body, headings, metadata, captions, tables, filters. Arno Pro
+     has a low x-height (lowercase reads small for its point size), so it needs
+     a larger root than a typical sans/transitional serif. Tune THIS one number
+     to make everything bigger/smaller. (Quarto's default is 17px.) */
+  font-size: 18px;
+
+  --caro-measure: 42rem;        /* readable text column (~80 cpl at the Arno body size) */
+  --caro-wide-measure: 60rem;   /* generous content frame: figures, tables, hero, data */
+  /* Visual companions with an embedded sidebar+canvas viewer need near-full page width. */
+  --caro-visual-measure: min(calc(100vw - 2rem), 100rem);
+
+  /* Vertical-rhythm scale — every heading / section / dict-hero / title-block
+     gap derives from these tokens so spacing is uniform within and between
+     pages (home included). Don't hand-pick new rem margins for these elements;
+     reach for a step. */
+  --space-2xs: 0.4rem;
+  --space-xs:  0.6rem;
+  --space-sm:  0.85rem;
+  --space-md:  1.1rem;
+  --space-lg:  1.5rem;
+  --space-xl:  2rem;
+  --space-section: clamp(2.4rem, 4vw, 3.2rem);
+
+  /* Back-compat aliases — existing var() references keep working. */
+  --caro-section-space: var(--space-section);
+  --caro-heading-space: var(--space-md);
+
+  /* UI (Myriad) emphasis weight. Myriad Pro in the kit has 400/600 but NO 500,
+     so the old `font-weight: 500` rounded to 400. 600 gives deterministic,
+     intentional medium emphasis — drop to 400 here if the nav reads heavy. */
+  --ui-weight: 600;
+}
+
+body {
+  font-family: $font-family-serif;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}

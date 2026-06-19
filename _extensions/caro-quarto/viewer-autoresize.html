@@ -1,0 +1,72 @@
+<script>
+/* CARO visual-companion viewer auto-resize (parent side).
+
+   Embedded p5 viewers (iframe.visual-companion-viewer) measure their own content
+   height (viewer-autoresize-client.js) and postMessage it here; we set the
+   iframe height to match so the visual is never clipped and there is no dead
+   space — no per-piece magic-number min-height required. The CSS min-height on
+   the iframe remains only as the pre-JS first-paint fallback to avoid a jump.
+
+   IntersectionObserver posts caro-viewer-visibility so the iframe can suspend
+   its render loop when scrolled offscreen (WebKit / Core Web Vitals energy).
+
+   Security model: we do NOT gate on event.origin (that breaks file:// review,
+   where origins are opaque). Instead we accept the height only when event.source
+   is the contentWindow of one of our own viewer iframes — an identity the
+   browser sets and page scripts cannot forge — and we accept only a clamped
+   integer height. A foreign frame cannot match one of our iframes' windows. */
+(function () {
+  "use strict";
+
+  function clamp(n) {
+    n = Math.round(n);
+    if (!isFinite(n) || n < 0) return 0;
+    return Math.min(n, 20000);
+  }
+
+  function postVisibility(iframe, visible) {
+    if (!iframe.contentWindow) return;
+    iframe.contentWindow.postMessage({ type: "caro-viewer-visibility", visible: !!visible }, "*");
+  }
+
+  function onMessage(e) {
+    var d = e.data;
+    if (!d || d.type !== "caro-viewer-height" || typeof d.height !== "number") return;
+
+    var iframes = document.querySelectorAll("iframe.visual-companion-viewer");
+    for (var i = 0; i < iframes.length; i++) {
+      if (iframes[i].contentWindow === e.source) {
+        var h = clamp(d.height) + "px";
+        iframes[i].style.height = h;
+        iframes[i].style.minHeight = h;
+        return;
+      }
+    }
+  }
+
+  function observeViewerIframes() {
+    if (!("IntersectionObserver" in window)) return;
+    var iframes = document.querySelectorAll("iframe.visual-companion-viewer");
+    for (var i = 0; i < iframes.length; i++) {
+      var iframe = iframes[i];
+      if (iframe.dataset.caroVisibilityObserved) continue;
+      iframe.dataset.caroVisibilityObserved = "1";
+      new IntersectionObserver(function (entries) {
+        for (var j = 0; j < entries.length; j++) {
+          if (entries[j].target === iframe) {
+            postVisibility(iframe, entries[j].isIntersecting);
+          }
+        }
+      }).observe(iframe);
+    }
+  }
+
+  window.addEventListener("message", onMessage);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", observeViewerIframes);
+  } else {
+    observeViewerIframes();
+  }
+  window.addEventListener("load", observeViewerIframes);
+})();
+</script>

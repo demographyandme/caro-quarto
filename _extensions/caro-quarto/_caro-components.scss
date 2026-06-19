@@ -1,0 +1,393 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   Reusable components (promoted 2026)
+
+   Purpose
+   This section contains the shared, reusable visual language for the
+   demographyandme family of sites: Research hub project cards, media/press
+   highlight cards, publication list affordances, improved interactive states,
+   h4 treatment on long publication pages, provenance display, footer
+   social patterns, and demography-themed 404 pages (`.caro-404`).
+
+   These were refined on the main site (www.demographyandme.com) and, at the
+   user's direction in June 2026, promoted into the canonical CARO source so
+   they become the default for every existing companion and all future ones.
+
+   How distribution works
+   - Local development: Set `CARO_QUARTO_SRC` (see pre_render.sh and
+     scripts/render.sh). The canonical files are copied into each site's
+     `_extensions/caro-quarto/` before render.
+   - CI / published sites: Workflows run `quarto update extension
+     demographyandme/caro-quarto --no-prompt` (no local paths required).
+
+   Division of responsibility (the operating model)
+   - Canonical CARO (this file): Shared identity and reusable components that
+     should look and behave consistently across the whole family.
+   - Consuming site's `styles.scss`: Thin, site-specific presentation only
+     (home-page grid and lede, exact arrangement of "Recent updates" or
+     "In the media" cards, one-off page layouts, local measure overrides,
+     anything that is deliberately not meant to become the default for other
+     sites). Interactive companion table chrome (`.phe-*`, `.dtb-*`) lives
+     in this file — companions should not fork it locally.
+
+   Future extensions
+   When a new pattern or polish on one site is judged worth making universal,
+   move the relevant rules here (into this "Reusable components" area or a
+   new clearly labeled section), update this comment, and the change will
+   flow to everyone on the next CARO update or local sync. Site-specific
+   exceptions stay in the individual `styles.scss`.
+
+   This structure keeps the shared scholarly voice coherent while still
+   allowing each project its own personality where it matters.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Publication list affordances (category pages, back links, DOIs, etc.) ── */
+section.level2:has(.pub-cat-link-wrap) {
+  position: relative;
+}
+
+.pub-cat-link-wrap {
+  position: absolute;
+  right: 0;
+  top: 0.15rem;
+}
+
+.pub-cat-link,
+.project-link,
+.project-card-link,
+.pub-back-link,
+.pub-doi-link,
+.pub-url-link,
+.pub-pdf-link {
+  font-family: $font-family-sans-serif;
+  font-size: 0.84rem;
+  font-weight: var(--ui-weight);
+  white-space: nowrap;
+}
+
+.pub-cat-link,
+.pub-back-link {
+  font-size: 0.8rem;
+  color: $secondary;
+  text-decoration-color: rgba($secondary, 0.45);
+}
+
+.pub-doi-link,
+.pub-url-link,
+.pub-pdf-link {
+  margin-left: 0.3em;
+}
+
+/* Heading + right-aligned action link pattern (used on Research hub and
+   some publication pages). */
+section.level2:has(> .project-link-wrap) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 1rem;
+  align-items: baseline;
+}
+
+section.level2:has(> .project-link-wrap) > h2 {
+  grid-column: 1;
+}
+
+section.level2:has(> .project-link-wrap) > .project-link-wrap {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+}
+
+section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 640px) {
+  section.level2:has(> .project-link-wrap) {
+    grid-template-columns: 1fr;
+  }
+
+  section.level2:has(> .project-link-wrap) > .project-link-wrap {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* ── Research project cards (the Research hub pattern) ────────────────────── */
+.project-card {
+  display: grid;
+  grid-template-columns: minmax(12rem, 0.85fr) minmax(0, 1.35fr);
+  gap: 1.15rem;
+  align-items: stretch;
+  border: 1px solid $border-color;
+  background: rgba(255, 255, 255, 0.36);
+  margin-top: var(--space-md);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+.project-card-figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 13rem;
+  padding: 0.8rem;
+  background: #fff;
+  border-right: 1px solid $border-color;
+  text-decoration: none;
+}
+
+.project-card-figure img {
+  width: 100%;
+  max-height: 13rem;
+  object-fit: contain;
+}
+
+.project-card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.06rem;
+  line-height: 1.58;
+  padding: 1.25rem 1.25rem 1.3rem 0;
+}
+
+.project-card-body p {
+  margin-bottom: var(--space-sm);
+}
+
+.project-card-summary {
+  font-family: $font-family-sans-serif;
+  font-size: 0.98rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: $body-color;
+  letter-spacing: 0.002em;
+}
+
+.project-card-link {
+  align-self: flex-start;
+  margin-top: 0.1rem;
+}
+
+.project-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.9rem;
+  align-items: baseline;
+}
+
+.project-card-provenance {
+  margin-top: 0.1rem;
+  margin-bottom: 0.35rem;
+}
+
+.project-card-provenance small {
+  color: $secondary;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+}
+
+/* 2026 polish: more generous, calm lift + focus using the warm accent
+   (already used for h2 underlines and blockquotes). */
+.project-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.065);
+  border-color: color-mix(in srgb, $accent-warm 22%, $border-color);
+}
+
+.project-card:focus-within {
+  border-color: color-mix(in srgb, $accent-warm 35%, $border-color);
+}
+
+/* Solid (not semi-transparent) so the focus ring keeps >=3:1 against the
+   cream/white surfaces (WCAG 2.2 SC 2.4.13 / 1.4.11). $accent-warm is 4.0:1. */
+.project-card:focus-visible,
+.project-card .project-card-link:focus-visible {
+  outline: 2px solid $accent-warm;
+  outline-offset: 2px;
+}
+
+/* Slightly warmer accent on the action links on hover — uses $accent-warm-text
+   (AAA 7.2:1), not $accent-warm, since this colours small link text. */
+.project-card-link:hover,
+.project-card-link:focus-visible {
+  color: $accent-warm-text;
+  text-decoration-color: rgba($accent-warm-text, 0.5);
+}
+
+@media (max-width: 720px) {
+  .project-card {
+    grid-template-columns: 1fr;
+  }
+
+  .project-card-figure {
+    border-right: 0;
+    border-bottom: 1px solid $border-color;
+  }
+
+  .project-card-body {
+    padding: 0 1rem 1rem;
+  }
+}
+
+/* ── Media cards (YouTube / press highlights) ─────────────────────────────── */
+.media-card {
+  display: inline-block;
+  position: relative;
+  max-width: 400px;
+  border-radius: 4px;
+  overflow: hidden;
+  text-decoration: none;
+  line-height: 0;
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.media-card img {
+  width: 100%;
+  height: auto;
+  transition: opacity 0.2s;
+}
+
+.media-card:hover img {
+  opacity: 0.85;
+}
+
+.media-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.media-card:focus-visible {
+  outline: 2px solid $accent-warm;
+  outline-offset: 3px;
+}
+
+.media-card-label {
+  position: absolute;
+  bottom: 0.6rem;
+  left: 0.6rem;
+  font-family: $font-family-sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.65);
+  padding: 0.2rem 0.5rem;
+  border-radius: 3px;
+  line-height: 1.4;
+}
+
+/* ── Footer social icons + provenance (last-updated + short SHA) ──────────── */
+/* The ORCID iD mark is embedded as a data URI so that any site using the
+   canonical CARO footer social icons gets the official green logo without
+   needing to ship an orcid.svg asset. This eliminates a cross-project file
+   dependency that broke renders in structured companions (site/ + _site/).
+   The SVG is the official ORCID iD mark (green #A6CE39) per brand guidelines. */
+.icon-orcid {
+  display: inline-block;
+  width: 1.12em;
+  height: 1.12em;
+  /* Inline data URI (minified) of the ORCID logo — no external file required. */
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' role='img' aria-hidden='true'%3E%3Cpath fill='%23A6CE39' d='M12 0C5.372 0 0 5.372 0 12s5.372 12 12 12 12-5.372 12-12S18.628 0 12 0zM7.375 6.403h3.13v11.194h-3.13V6.403zm1.565 12.965c-.86 0-1.558.698-1.558 1.558s.698 1.558 1.558 1.558 1.558-.698 1.558-1.558-.698-1.558-1.558-1.558zm6.012-12.965h3.13c2.188 0 3.96 1.772 3.96 3.96s-1.772 3.96-3.96 3.96h-1.578v3.274h-3.13V6.403zm0 5.167h.854c.86 0 1.558-.698 1.558-1.558s-.698-1.558-1.558-1.558h-.854v3.116z'/%3E%3C/svg%3E") no-repeat center / contain;
+  vertical-align: -0.1em;
+}
+
+.footer-social-link[href*="orcid.org"]:hover .icon-orcid,
+.footer-social-link[href*="orcid.org"]:focus-visible .icon-orcid {
+  filter: brightness(0.92);
+}
+
+.footer-social-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.footer-social-link {
+  color: inherit;
+  opacity: 0.88;
+  font-size: 1.1rem;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.footer-social-link:hover,
+.footer-social-link:focus-visible {
+  color: $link-color;
+  opacity: 1;
+}
+
+/* No opacity dimming — it dropped these below AA. The $footer-fg colour (#525252,
+   AAA) plus the smaller size already reads as quiet/secondary. */
+.site-last-updated {
+  display: inline-block;
+  font-size: 0.78rem;
+  letter-spacing: 0.01em;
+  margin-top: 0.15rem;
+}
+
+.site-provenance {
+  font-family: var(--caro-font-mono, $font-family-monospace);
+  font-size: 0.9em;
+  letter-spacing: 0.02em;
+}
+
+/* ── Demography-themed 404 pages (main site + companions) ─────────────────── */
+.caro-404 {
+  text-align: center;
+  padding: 3rem 1rem;
+}
+
+.caro-404-code {
+  font-family: $arno-display;
+  font-size: clamp(4rem, 12vw, 6rem);
+  line-height: 1;
+  margin: 0 0 0.5rem;
+  color: $primary;
+}
+
+.caro-404-pun {
+  font-family: $arno-subhead;
+  font-size: clamp(1.15rem, 2.5vw, 1.3rem);
+  line-height: 1.25;
+  margin: 0 0 1.5rem;
+  color: $body-color;
+}
+
+.caro-404-body {
+  font-family: $font-family-sans-serif;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: $secondary;
+  max-width: 32rem;
+  margin: 0 auto 2rem;
+}
+
+/* ── Visual Demography hub landing (main site /visual-demography/) ─────────── */
+/* Measure + centering from _caro-reading-frame (.content > p). */
+.visual-hub-tagline {
+  font-family: $font-family-serif;
+  font-size: 1.15rem;
+  line-height: 1.45;
+  margin: 0 0 var(--space-md);
+}
+
+.visual-hub-credibility {
+  margin: var(--space-lg) 0 var(--space-xs);
+  color: $secondary;
+  line-height: 1.55;
+}
+
+/* ── Visual companions (body-classes: visual-companion) ───────────────────── */
+.visual-companion-viewer {
+  display: block;
+  width: 100%;
+  /* Pre-JS first-paint fallback only; viewer-autoresize.html owns the final height.
+     Do not tune this per piece to fight clipping — the postMessage contract handles it. */
+  min-height: 1400px;
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  background: $body-bg;
+}

@@ -1,0 +1,5 @@
+.DS_Store
+._*
+.quarto/
+_site/
+node_modules/

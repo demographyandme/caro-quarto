@@ -1,0 +1,240 @@
+/* Off-site link behaviour is implemented in external-links.html (included from
+   _quarto.yml beside fonts.html): navbar/dropdown/footer/sidebar stay same tab;
+   DOI, companions, and other external URLs open in a new tab. Research hub
+   card action links also get explicit target="_blank" at generation time. */
+
+.quarto-title {
+  margin-bottom: var(--space-xl);
+}
+
+.quarto-title h1.title {
+  margin-bottom: var(--space-xs);
+}
+
+h1 {
+  font-family: $arno-display;
+  font-size: clamp(1.9rem, 3.45vw, 2.55rem);
+  line-height: 1.14;
+  letter-spacing: -0.013em;   // display tier: tighter than the subhead default
+}
+
+h2 {
+  font-size: clamp(1.38rem, 2.15vw, 1.6rem);
+  line-height: 1.22;
+  padding-bottom: 0.42rem;
+  border-bottom: 1px solid $border-color;
+  border-bottom-color: $accent-warm;
+  margin-top: var(--space-xl);
+  margin-bottom: var(--caro-heading-space);
+}
+
+h3 {
+  font-size: 1.2rem;
+  line-height: 1.3;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-sm);
+}
+
+#quarto-document-content h4 {
+  font-family: $font-family-sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: 0.012em;
+  color: $secondary;
+  font-variant-numeric: tabular-nums;
+  margin: var(--space-lg) 0 var(--space-xs);
+}
+
+.navbar {
+  font-family: $font-family-sans-serif;
+  font-size: 0.9rem;
+  font-weight: var(--ui-weight);
+  border-bottom: 1px solid $border-color;
+}
+
+.navbar .navbar-brand {
+  font-family: $headings-font-family;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.006em;
+}
+
+.nav-footer {
+  font-family: $font-family-sans-serif;
+  font-size: 0.86rem;
+  border-top: 1px solid $border-color;
+}
+
+#quarto-margin-sidebar {
+  font-family: $font-family-sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+
+  .nav-link {
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+  }
+}
+
+code, pre {
+  font-family: $font-family-monospace;
+  font-size: 0.92em;
+}
+
+.callout {
+  border-left-color: $primary;
+}
+
+blockquote {
+  border-left: 2px solid $primary;
+  border-left-color: $accent-warm;
+  padding-left: var(--space-md);
+  background: rgba($accent-warm, 0.04);
+  font-style: italic;
+}
+
+a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Consistent, visible keyboard focus (shows on keyboard focus only, not mouse).
+   Solid $accent-warm ring keeps >=3:1 against cream/white (WCAG 2.2 SC 2.4.13). */
+a:focus-visible,
+.btn:focus-visible {
+  outline: 2px solid $accent-warm;
+  outline-offset: 2px;
+}
+
+/* Skip-to-content link: first focusable element on the page; off-screen until
+   it receives keyboard focus, then slides into the top-left. Paired with the
+   skip-link.html before-body include and #quarto-document-content as target. */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -3.5rem;
+  z-index: 1100;
+  background: $body-bg;
+  color: $link-color;
+  font-family: $font-family-sans-serif;
+  font-weight: var(--ui-weight);
+  padding: 0.5rem 0.9rem;
+  border: 1px solid $accent-warm;
+  border-radius: 3px;
+}
+.skip-link:focus {
+  top: 0.5rem;
+  outline: 2px solid $accent-warm;
+  outline-offset: 2px;
+}
+#quarto-document-content:focus {
+  outline: none;   /* programmatic focus target for the skip link */
+}
+
+.btn {
+  font-family: $font-family-sans-serif;
+  font-weight: var(--ui-weight);
+}
+
+#quarto-document-content h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#quarto-document-content h2 a:hover,
+#quarto-document-content h2 a:focus-visible {
+  color: $link-color;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+/* Bootstrap `.table` in main column — compact rows (variable dictionaries, etc.) */
+#quarto-document-content table.table {
+  th,
+  td {
+    padding: 0.3rem 0.5rem;
+    line-height: 1.25;
+    vertical-align: top;
+  }
+
+  thead th {
+    padding: 0.35rem 0.5rem;
+  }
+}
+
+#quarto-document-content > section.level2 {
+  margin-top: var(--caro-section-space);
+}
+
+#quarto-document-content > section.level2 > h2 {
+  margin-top: 0;
+}
+
+.references.hanging-indent .csl-entry {
+  padding-left: 0;
+  text-indent: 0;
+}
+
+.references .csl-entry,
+.csl-entry {
+  font-size: 1.08rem;
+  line-height: 1.5;
+  margin-bottom: var(--space-md);
+}
+
+.dict-hero {
+  font-family: $font-family-dict;
+  margin-top: var(--space-lg);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;   /* governs the IPA line + definition wrap; headword sets its own below */
+}
+
+/* The dict-hero's visible top/bottom gaps must be the dict-hero's OWN margins,
+   not the collapsed margins of its neighbours (which differ per page: title vs
+   hidden title above, section vs grid below). When a dict-hero follows the title
+   block, zero the title/header bottom margins (which otherwise collapse through
+   and leak ~2rem on inner pages) so the title -> dict gap is the dict-hero's
+   margin-top alone — identical to home, where the title is hidden. Category
+   pages (no dict-hero) keep their normal title spacing via :has(). */
+#title-block-header:has(+ .dict-hero),
+#title-block-header:has(+ .dict-hero) .quarto-title,
+#title-block-header:has(+ .dict-hero) .quarto-title h1.title { margin-bottom: 0; }
+.dict-hero + section.level2 { margin-top: 0; } /* dict -> first section = dict margin-bottom */
+.dict-hero + .dict-hero { margin-top: 0; } /* stacked heroes: one --space-lg gap via margin-bottom only */
+
+.dict-hero .dict-word {
+  display: block;
+  font-size: 1.32rem;
+  font-weight: 600;
+  line-height: 1.15;        /* tight headword box — no oversized gap before the IPA line */
+  letter-spacing: -0.003em;
+  margin-bottom: var(--space-2xs);   /* even gap: headword -> IPA (matches IPA -> def) */
+}
+
+.dict-hero .dict-ipa {
+  font-family: $font-family-sans-serif;
+  font-weight: 400;
+  font-size: 0.84rem;
+  color: $secondary;
+}
+
+.dict-hero .dict-pos {
+  font-family: $font-family-sans-serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 0.84rem;
+  margin-left: 0.3em;
+  color: $secondary;
+}
+
+.dict-hero .dict-def {
+  display: block;
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-top: var(--space-2xs);      /* even gap: IPA -> definition (matches headword -> IPA) */
+  color: $body-color;
+  padding-left: 0.05em;
+}

@@ -1,0 +1,50 @@
+<script>
+(function () {
+  "use strict";
+
+  var INTERNAL = /^(www\.)?demographyandme\.com$/i;
+
+  function shouldSkip(a) {
+    if (a.hasAttribute("data-skip-external")) return true;
+    return !!a.closest(
+      ".navbar, .quarto-navbar, .nav-footer, footer.page-footer, .dropdown-menu, #quarto-margin-sidebar"
+    );
+  }
+
+  function hostOf(href) {
+    try {
+      return new URL(href, document.baseURI).hostname.replace(/^www\./i, "").toLowerCase();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function markNewTab(a) {
+    a.setAttribute("target", "_blank");
+    a.setAttribute("rel", "noopener noreferrer");
+  }
+
+  function applyExternalLinks() {
+    document.querySelectorAll("a[href]").forEach(function (a) {
+      if (shouldSkip(a)) return;
+      var href = a.getAttribute("href");
+      if (!href || href.charAt(0) === "#") return;
+
+      if (a.classList.contains("project-card-link") || a.classList.contains("project-card-figure")) {
+        markNewTab(a);
+        return;
+      }
+
+      var host = hostOf(href);
+      if (!host || INTERNAL.test(host)) return;
+      markNewTab(a);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", applyExternalLinks);
+  } else {
+    applyExternalLinks();
+  }
+})();
+</script>

@@ -1,0 +1,237 @@
+/* ── Interactive companion data tables (#data) ─────────────────────────────
+   Filterable JS tables in research companions. Class prefixes: .phe-* (WPP
+   aging and future PHE-style sites), .dtb-* (Brazil transition chapter).
+   New interactive companions: pick a prefix, reuse these rules, set
+   body-classes: research-companion — no local styles.scss for table chrome. */
+
+#data :is(.phe-controls, .dtb-controls) .form-label {
+  font-size: 0.875rem;
+  font-family: $font-family-sans-serif;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+#data :is(.phe-controls, .dtb-controls) :is(.form-select, .form-control) {
+  font-size: 0.875rem;
+  font-family: $font-family-sans-serif;
+}
+
+/* Table-notes are prose — keep sans-serif at reading size. */
+#data :is(.phe-table-notes, .dtb-table-notes) {
+  font-size: 0.875rem;
+  font-family: $font-family-sans-serif;
+}
+
+/* Toolbar and pagination inherit the button typeface/size so all chrome is uniform. */
+#data :is(.phe-toolbar, .phe-pagination, .dtb-toolbar, .dtb-pagination) {
+  font-size: 0.72rem;
+  font-family: $font-family-monospace;
+}
+
+#data :is(.phe-table-notes, .dtb-table-notes) p {
+  margin-bottom: 0.4rem;
+}
+
+#data :is(.phe-table, .dtb-table) {
+  margin-bottom: 0;
+}
+
+#data :is(.phe-table, .dtb-table) th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #dee2e6;
+  font-family: $font-family-sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 8px 6px;
+  white-space: nowrap;
+}
+
+#data :is(.phe-table th.phe-col-num, .phe-table th.text-end, .dtb-col-text, .phe-col-text) {
+  font-family: $font-family-sans-serif;
+  white-space: nowrap;
+}
+
+#data :is(.phe-table, .dtb-table) td {
+  padding: 6px 8px;
+  font-family: $font-family-sans-serif;
+  font-size: 0.85rem;
+  vertical-align: middle;
+}
+
+#data :is(.phe-col-num, .dtb-col-num) {
+  font-family: $font-family-sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+#data :is(.phe-table, .dtb-table) td:first-child {
+  font-weight: 400;
+}
+
+/* All control buttons (Reset, Download, Previous, Next) match .dtb-download-btn:
+   same font, size, weight, padding, and neutral cream/secondary color scheme. */
+#data :is(.phe-pagination, .dtb-pagination) .btn,
+#data :is(.phe-toolbar, .dtb-toolbar) .btn {
+  font-family: $font-family-monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $body-color;
+  background: #f1efea;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  white-space: nowrap;
+  line-height: 1.5;
+  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
+  &:hover { color: #fff; background: $secondary; border-color: $secondary; }
+}
+
+/* Pagination "Rows per page" label: single line, matching button type. */
+#data :is(.phe-pagination, .dtb-pagination) .form-label {
+  font-family: $font-family-monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  margin-bottom: 0;
+}
+
+/* Page-size select: compact to match button height. */
+#data :is(.phe-pagination, .dtb-pagination) .form-select {
+  font-family: $font-family-monospace;
+  font-size: 0.72rem;
+  padding-top: 0.15rem;
+  padding-bottom: 0.15rem;
+}
+
+#data :is(#phe-row-count, #dtb-row-count) {
+  font-weight: 600;
+  padding-left: 8px;
+}
+
+#data :is(#phe-row-count.phe-status-ok, #dtb-row-count.dtb-status-ok) {
+  color: #006400;
+}
+
+#data :is(#phe-row-count.phe-status-error, #dtb-row-count.dtb-status-error) {
+  color: #c00;
+}
+
+#data :is(.phe-error-banner, .dtb-error-banner) {
+  background: #fee;
+  color: #c00;
+  padding: 12px;
+  margin: 20px 0;
+  border: 2px solid #c00;
+}
+
+#data .dtb-error-banner {
+  font-family: $font-family-monospace;
+  white-space: pre-wrap;
+}
+
+#data :is(.phe-reset-btn, .dtb-reset-btn) {
+  margin-right: 8px;
+}
+
+#data .phe-header-sub {
+  font-size: 0.85em;
+}
+
+/* Stage / reference tables (e.g. WPP aging Table 1, Variables dictionary) */
+.phe-stage-table {
+  margin: 1.25rem 0 1.75rem;
+  font-family: $font-family-sans-serif;
+}
+
+.phe-stage-caption {
+  font-family: $font-family-sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #2B2B2B;
+}
+
+.phe-stage-table .table {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.phe-stage-table .table thead th {
+  font-family: $font-family-sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: #f5f5f5;
+  border-bottom: 2px solid #dee2e6;
+  vertical-align: bottom;
+  padding: 7px 8px;
+}
+
+#quarto-document-content .phe-stage-table .table thead tr:first-child th {
+  white-space: normal;
+  line-height: 1.25;
+  vertical-align: middle;
+}
+
+#quarto-document-content .phe-stage-table .table thead tr:nth-child(2) th {
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.phe-stage-table .table tbody td {
+  font-family: $font-family-sans-serif;
+  font-size: 0.875rem;
+  vertical-align: middle;
+  padding: 5px 8px;
+}
+
+.phe-stage-table .table tbody td:first-child {
+  font-weight: 400;
+}
+
+.phe-stage-footnote {
+  font-family: $font-family-sans-serif;
+  font-size: 0.875rem;
+  color: #4a4a4a;
+  margin-top: 0.4rem;
+  line-height: 1.5;
+}
+
+/* ── DTB Trends — strip-panel time-series charts (#trends) ──────────────────
+   Observable Plot panels rendered by OJS cells in index.qmd.
+   Colors mirror caro-viewer-tokens.css (kept in sync with caro-tokens.scss). */
+
+#trends .dtb-strip-chart {
+  margin-bottom: 0.25rem;
+}
+
+#trends .dtb-download-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 0.35rem;
+  margin-bottom: 0.25rem;
+  font-family: $font-family-monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $body-color;
+  background: #f1efea;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  cursor: pointer;
+  line-height: 1.5;
+  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
+  &:hover { color: #fff; background: $secondary; border-color: $secondary; }
+}
+
+#trends .cell form {
+  font-family: $font-family-sans-serif;
+  font-size: 0.875rem;
+}
+
+#trends .cell label {
+  font-weight: 600;
+  color: $body-color;
+}

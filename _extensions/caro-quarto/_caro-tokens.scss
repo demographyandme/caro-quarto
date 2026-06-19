@@ -1,0 +1,48 @@
+/* ── CARO design tokens ─────────────────────────────────────────── */
+/* Archival cream, crimson accent. Typography served via Adobe Fonts (kit in
+   fonts.html): Arno Pro for serif body + headings (using its optical sizes),
+   Myriad Pro for UI/sans, Source Code Pro for mono.
+
+   Arno's optical sizes are SEPARATE families, not a CSS `opsz` axis —
+   `font-optical-sizing` does nothing; pick the tier by size:
+     Caption    (<=~13px)  footnotes / very small serif text
+     Text        (15–18)   body / running prose / references
+     Subhead     (18–28)   h2, h3, dict-word
+     Display     (>=~30)   h1, hero
+   Available weights: Arno 400/600/700 (Display also 300); Myriad
+   300/400/600/700/900 (NO 500 — requests for 500 fall back to 400). */
+
+// Arno Pro optical tiers (Georgia fallback if the kit fails to load)
+$arno-caption:   "arno-pro-caption",    Georgia, "Times New Roman", serif;
+$arno-smalltext: "arno-pro-small-text", Georgia, "Times New Roman", serif;
+$arno-text:      "arno-pro",            Georgia, "Times New Roman", serif;
+$arno-subhead:   "arno-pro-subhead",    Georgia, "Times New Roman", serif;
+$arno-display:   "arno-pro-display",    Georgia, "Times New Roman", serif;
+
+// Public family tokens — names kept stable so styles.scss + Bootstrap need no edits
+$font-family-sans-serif: "myriad-pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+$font-family-serif: $arno-text;
+$font-family-dict: $arno-subhead;
+$font-family-monospace: "source-code-pro", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+
+$body-bg: #F9F8F6;
+$body-color: #242424;   // slightly darker ink — Arno at 400 reads lighter than Source did
+$link-color: #8c1d40;
+$link-hover-color: darken($link-color, 12%);
+
+$primary: #8c1d40;
+$secondary: #525252;          // AAA (7.4:1 on cream): secondary/quiet text + faint underlines
+$border-color: #dedad3;
+$accent-warm: #b5654a;        // borders / large / decoration only (4:1) — never small text
+$accent-warm-text: #84402c;   // AAA warm (7.2:1) for small warm text (e.g. card-link hover)
+
+$font-size-base: 1.17rem;   // Arno reads ~8% smaller than Source at a given size — compensate
+$line-height-base: 1.7;
+$headings-font-family: $arno-subhead;
+$headings-font-weight: 600;
+$headings-color: $body-color;
+
+$navbar-bg: #F9F8F6;
+$navbar-fg: #2B2B2B;
+$footer-bg: #F9F8F6;
+$footer-fg: #525252;
