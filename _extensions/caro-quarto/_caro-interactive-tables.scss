@@ -4,6 +4,24 @@
    New interactive companions: pick a prefix, reuse these rules, set
    body-classes: research-companion — no local styles.scss for table chrome. */
 
+/* Shared chrome-button treatment (Reset, Download, Previous, Next) — one
+   source for the mono cream/secondary button; extend and add per-context
+   extras (layout, cursor) at the use site. */
+%caro-chrome-btn {
+  font-family: $font-family-monospace;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: $body-color;
+  background: $chrome-btn-bg;
+  border: 1px solid $secondary;
+  border-radius: 4px;
+  padding: 0.2rem 0.6rem;
+  line-height: 1.5;
+  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
+  &:hover { color: #fff; background: $secondary; border-color: $secondary; }
+}
+
 #data :is(.phe-controls, .dtb-controls) .form-label {
   font-size: 0.875rem;
   font-family: $font-family-sans-serif;
@@ -37,8 +55,8 @@
 }
 
 #data :is(.phe-table, .dtb-table) th {
-  background: #f5f5f5;
-  border-bottom: 2px solid #dee2e6;
+  background: $table-header-bg;
+  border-bottom: 2px solid $table-header-border;
   font-family: $font-family-sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
@@ -68,23 +86,11 @@
   font-weight: 400;
 }
 
-/* All control buttons (Reset, Download, Previous, Next) match .dtb-download-btn:
-   same font, size, weight, padding, and neutral cream/secondary color scheme. */
+/* All control buttons (Reset, Download, Previous, Next) share %caro-chrome-btn. */
 #data :is(.phe-pagination, .dtb-pagination) .btn,
 #data :is(.phe-toolbar, .dtb-toolbar) .btn {
-  font-family: $font-family-monospace;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: $body-color;
-  background: #f1efea;
-  border: 1px solid $secondary;
-  border-radius: 4px;
-  padding: 0.2rem 0.6rem;
+  @extend %caro-chrome-btn;
   white-space: nowrap;
-  line-height: 1.5;
-  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
-  &:hover { color: #fff; background: $secondary; border-color: $secondary; }
 }
 
 /* Pagination "Rows per page" label: single line, matching button type. */
@@ -111,19 +117,19 @@
 }
 
 #data :is(#phe-row-count.phe-status-ok, #dtb-row-count.dtb-status-ok) {
-  color: #006400;
+  color: $status-ok;
 }
 
 #data :is(#phe-row-count.phe-status-error, #dtb-row-count.dtb-status-error) {
-  color: #c00;
+  color: $status-error;
 }
 
 #data :is(.phe-error-banner, .dtb-error-banner) {
-  background: #fee;
-  color: #c00;
+  background: $status-error-bg;
+  color: $status-error;
   padding: 12px;
   margin: 20px 0;
-  border: 2px solid #c00;
+  border: 2px solid $status-error;
 }
 
 #data .dtb-error-banner {
@@ -162,8 +168,8 @@
   font-family: $font-family-sans-serif;
   font-size: 0.8rem;
   font-weight: 600;
-  background: #f5f5f5;
-  border-bottom: 2px solid #dee2e6;
+  background: $table-header-bg;
+  border-bottom: 2px solid $table-header-border;
   vertical-align: bottom;
   padding: 7px 8px;
 }
@@ -193,7 +199,7 @@
 .phe-stage-footnote {
   font-family: $font-family-sans-serif;
   font-size: 0.875rem;
-  color: #4a4a4a;
+  color: $footnote-color;
   margin-top: 0.4rem;
   line-height: 1.5;
 }
@@ -207,23 +213,12 @@
 }
 
 #trends .dtb-download-btn {
+  @extend %caro-chrome-btn;
   display: inline-flex;
   align-items: center;
   margin-top: 0.35rem;
   margin-bottom: 0.25rem;
-  font-family: $font-family-monospace;
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0.02em;
-  color: $body-color;
-  background: #f1efea;
-  border: 1px solid $secondary;
-  border-radius: 4px;
-  padding: 0.2rem 0.6rem;
   cursor: pointer;
-  line-height: 1.5;
-  transition: color 0.12s, background-color 0.12s, border-color 0.12s;
-  &:hover { color: #fff; background: $secondary; border-color: $secondary; }
 }
 
 #trends .cell form {
