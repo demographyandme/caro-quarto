@@ -46,3 +46,13 @@ $navbar-bg: #F9F8F6;
 $navbar-fg: #2B2B2B;
 $footer-bg: #F9F8F6;
 $footer-fg: #525252;
+
+// Interactive-table chrome (consumed by _caro-interactive-tables.scss —
+// previously hardcoded there, which made the table chrome un-themeable).
+$table-header-bg: #f5f5f5;
+$table-header-border: #dee2e6;
+$chrome-btn-bg: #f1efea;      // neutral cream for Reset/Download/pagination buttons
+$status-ok: #006400;
+$status-error: #c00;
+$status-error-bg: #fee;
+$footnote-color: #4a4a4a;

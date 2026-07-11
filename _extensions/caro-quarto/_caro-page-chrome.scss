@@ -22,8 +22,7 @@ h2 {
   font-size: clamp(1.38rem, 2.15vw, 1.6rem);
   line-height: 1.22;
   padding-bottom: 0.42rem;
-  border-bottom: 1px solid $border-color;
-  border-bottom-color: $accent-warm;
+  border-bottom: 1px solid $accent-warm;
   margin-top: var(--space-xl);
   margin-bottom: var(--caro-heading-space);
 }
@@ -87,8 +86,7 @@ code, pre {
 }
 
 blockquote {
-  border-left: 2px solid $primary;
-  border-left-color: $accent-warm;
+  border-left: 2px solid $accent-warm;
   padding-left: var(--space-md);
   background: rgba($accent-warm, 0.04);
   font-style: italic;
@@ -237,4 +235,36 @@ a:focus-visible,
   margin-top: var(--space-2xs);      /* even gap: IPA -> definition (matches headword -> IPA) */
   color: $body-color;
   padding-left: 0.05em;
+}
+
+/* ── Print ──────────────────────────────────────────────────────────
+   Academic sites get printed (publications, CVs): drop the screen chrome,
+   keep the reading column full-width, and calm link decoration. */
+@media print {
+  .navbar,
+  .nav-footer,
+  #quarto-margin-sidebar,
+  .skip-link,
+  .pub-back-link {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  #quarto-document-content {
+    max-width: 100%;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Keep each reference entry on one page where possible. */
+  .csl-entry,
+  blockquote {
+    break-inside: avoid;
+  }
 }
