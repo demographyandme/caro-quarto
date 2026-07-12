@@ -1,29 +1,31 @@
 /* ── CARO design tokens ─────────────────────────────────────────── */
-/* Archival cream, crimson accent. Typography served via Adobe Fonts (kit in
-   fonts.html): Arno Pro for serif body + headings (using its optical sizes),
-   Myriad Pro for UI/sans, Source Code Pro for mono.
+/* Archival cream, crimson accent. Typography self-hosted (fonts/fonts.css,
+   OFL — Google Fonts catalog families served from upstream builds so the
+   OpenType features the GF CSS API strips are preserved):
+     Literata (variable, opsz 7–72) — serif body, references, headings.
+       The opsz AXIS replaces Arno's five hand-cut optical families;
+       `font-optical-sizing: auto` (the CSS default) picks the cut by size.
+     Newsreader (variable, opsz 6–72) — display serif for h1 + dict-word
+       only, where its high-contrast display end earns its keep.
+     Fira Sans — UI/sans (Myriad's humanist genre; broad IPA coverage for
+       the dict-hero phonetics). Static cuts: 400/600/700 + 400 italic.
+     Spline Sans Mono (variable) — mono chrome (buttons, pagination, code).
+   Literata reads larger than Arno at equal size — $font-size-base is
+   retuned below (was 1.17rem for Arno, 1.1rem for Source before that). */
 
-   Arno's optical sizes are SEPARATE families, not a CSS `opsz` axis —
-   `font-optical-sizing` does nothing; pick the tier by size:
-     Caption    (<=~13px)  footnotes / very small serif text
-     Text        (15–18)   body / running prose / references
-     Subhead     (18–28)   h2, h3, dict-word
-     Display     (>=~30)   h1, hero
-   Available weights: Arno 400/600/700 (Display also 300); Myriad
-   300/400/600/700/900 (NO 500 — requests for 500 fall back to 400). */
-
-// Arno Pro optical tiers (Georgia fallback if the kit fails to load)
-$arno-caption:   "arno-pro-caption",    Georgia, "Times New Roman", serif;
-$arno-smalltext: "arno-pro-small-text", Georgia, "Times New Roman", serif;
-$arno-text:      "arno-pro",            Georgia, "Times New Roman", serif;
-$arno-subhead:   "arno-pro-subhead",    Georgia, "Times New Roman", serif;
-$arno-display:   "arno-pro-display",    Georgia, "Times New Roman", serif;
+// Optical-tier tokens: kept as named aliases so partials stay readable.
+// All Literata tiers resolve to one family — the opsz axis differentiates.
+$arno-caption:   "Literata", Georgia, "Times New Roman", serif;
+$arno-smalltext: "Literata", Georgia, "Times New Roman", serif;
+$arno-text:      "Literata", Georgia, "Times New Roman", serif;
+$arno-subhead:   "Literata", Georgia, "Times New Roman", serif;
+$arno-display:   "Newsreader", "Literata", Georgia, "Times New Roman", serif;
 
 // Public family tokens — names kept stable so styles.scss + Bootstrap need no edits
-$font-family-sans-serif: "myriad-pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+$font-family-sans-serif: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
 $font-family-serif: $arno-text;
-$font-family-dict: $arno-subhead;
-$font-family-monospace: "source-code-pro", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+$font-family-dict: $arno-display;   // dict-word is the display moment — Newsreader
+$font-family-monospace: "Spline Sans Mono", "source-code-pro", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
 $body-bg: #F9F8F6;
 $body-color: #242424;   // slightly darker ink — Arno at 400 reads lighter than Source did
@@ -36,7 +38,7 @@ $border-color: #dedad3;
 $accent-warm: #b5654a;        // borders / large / decoration only (4:1) — never small text
 $accent-warm-text: #84402c;   // AAA warm (7.2:1) for small warm text (e.g. card-link hover)
 
-$font-size-base: 1.17rem;   // Arno reads ~8% smaller than Source at a given size — compensate
+$font-size-base: 1.08rem;   // Literata's x-height sits between Source and Arno — first-pass retune
 $line-height-base: 1.7;
 $headings-font-family: $arno-subhead;
 $headings-font-weight: 600;
