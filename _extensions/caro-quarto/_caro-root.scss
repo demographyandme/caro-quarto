@@ -1,13 +1,11 @@
 :root {
   /* ── Master type scale ────────────────────────────────────────────────────
-     Every size + gap is in rem, so this single value scales the WHOLE site
-     uniformly — body, headings, metadata, captions, tables, filters. Arno Pro
-     has a low x-height (lowercase reads small for its point size), so it needs
-     a larger root than a typical sans/transitional serif. Tune THIS one number
+     Every size + gap is in rem, so $fs-root scales the WHOLE site uniformly —
+     body, headings, metadata, captions, tables, filters. Tune that one token
      to make everything bigger/smaller. (Quarto's default is 17px.) */
   font-size: $fs-root;
 
-  --caro-measure: 42rem;        /* readable text column (~80 cpl at the Arno body size) */
+  --caro-measure: 42rem;        /* readable text column (~80 cpl at the body size) */
   --caro-wide-measure: 60rem;   /* generous content frame: figures, tables, hero, data */
   /* Visual companions with an embedded sidebar+canvas viewer need near-full page width. */
   --caro-visual-measure: min(calc(100vw - 2rem), 100rem);
@@ -28,9 +26,8 @@
   --caro-section-space: var(--space-section);
   --caro-heading-space: var(--space-md);
 
-  /* UI (Myriad) emphasis weight. Myriad Pro in the kit has 400/600 but NO 500,
-     so the old `font-weight: 500` rounded to 400. 600 gives deterministic,
-     intentional medium emphasis — drop to 400 here if the nav reads heavy. */
+  /* UI emphasis weight. Fira Sans ships 400/600/700 (no 500), so 600 is
+   the deterministic medium — drop to 400 if the nav reads heavy. */
   --ui-weight: 600;
 }
 

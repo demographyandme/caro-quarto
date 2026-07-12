@@ -1,7 +1,6 @@
-/* ── Typographic refinement (Arno OpenType) ────────────────────────────────
-   The features that separate "a nice serif" from "typeset": old-style figures
-   in serif prose, lining/tabular figures in data tables, common ligatures,
-   true small caps for acronyms, and Arno's small-size optical cut for the
+/* ── Typographic refinement (OpenType) ────────────────────────────
+   Old-style figures in prose, lining/tabular in tables, common
+   ligatures, true small caps for acronyms, small optical cut for the
    smallest serif text. */
 
 #quarto-document-content {
@@ -18,7 +17,7 @@
   font-variant-numeric: lining-nums tabular-nums;
 }
 
-/* True small caps (Arno) for acronyms — pandoc `[RGPS]{.smallcaps}` or <abbr>.
+/* True small caps for acronyms — pandoc `[RGPS]{.smallcaps}` or <abbr>.
    Small caps need a touch of tracking to breathe. */
 abbr,
 .smallcaps {
@@ -31,13 +30,12 @@ abbr[title] {
   cursor: help;
 }
 
-/* Smallest serif text gets Arno's SmText optical cut (hand-drawn for small
-   sizes): footnotes and figure captions. */
+/* Smallest serif text (small opsz cut via font-optical-sizing): footnotes and figure captions. */
 .footnotes,
 figure figcaption,
 .quarto-figure figcaption,
 .figure-caption {
-  font-family: $arno-smalltext;
+  font-family: $serif-stack;
   letter-spacing: 0.006em;   // small text reads better with a touch more tracking
 }
 
@@ -53,14 +51,12 @@ blockquote {
 h1, h2, h3, h4, h5, h6 {
   font-family: $headings-font-family;
   font-weight: $headings-font-weight;
-  letter-spacing: -0.006em;   // Arno old-style fit dislikes tight tracking (was -0.018 for Source)
+  letter-spacing: -0.006em;   // old-style serif fit dislikes tight tracking
   text-wrap: balance;
 }
 
 #quarto-document-content {
-  // Prose knob. Literata's x-height is ~27% taller than Arno's: optical
-  // equivalence to the Arno-era 1.1rem is ~0.86rem; 0.94rem reads a touch
-  // larger (~+9%) for screen comfort. Taller x-height, less leading.
+  // Prose knob: the body reading size for all content pages.
   font-size: $fs-body;
   line-height: 1.62;
 }

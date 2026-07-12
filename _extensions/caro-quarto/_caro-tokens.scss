@@ -2,33 +2,28 @@
 /* Archival cream, crimson accent. Typography self-hosted (fonts/fonts.css,
    OFL — Google Fonts catalog families served from upstream builds so the
    OpenType features the GF CSS API strips are preserved):
-     Literata (variable, opsz 7–72) — serif body, references, headings.
-       The opsz AXIS replaces Arno's five hand-cut optical families;
+     Literata (variable, opsz 7–72) — serif body, references, headings;
        `font-optical-sizing: auto` (the CSS default) picks the cut by size.
      Newsreader (variable, opsz 6–72) — display serif for h1 + dict-word
        only, where its high-contrast display end earns its keep.
-     Fira Sans — UI/sans (Myriad's humanist genre; broad IPA coverage for
-       the dict-hero phonetics). Static cuts: 400/600/700 + 400 italic.
+     Fira Sans — UI/sans (broad IPA coverage for the dict-hero
+       phonetics). Static cuts: 400/600/700 + 400 italic.
      Spline Sans Mono (variable) — mono chrome (buttons, pagination, code).
-   Literata reads larger than Arno at equal size — $font-size-base is
-   retuned below (was 1.17rem for Arno, 1.1rem for Source before that). */
+*/
 
-// Optical-tier tokens: kept as named aliases so partials stay readable.
-// All Literata tiers resolve to one family — the opsz axis differentiates.
-$arno-caption:   "Literata", Georgia, "Times New Roman", serif;
-$arno-smalltext: "Literata", Georgia, "Times New Roman", serif;
-$arno-text:      "Literata", Georgia, "Times New Roman", serif;
-$arno-subhead:   "Literata", Georgia, "Times New Roman", serif;
-$arno-display:   "Newsreader", "Literata", Georgia, "Times New Roman", serif;
+// Serif stacks: one text family (opsz differentiates optical cuts) and
+// one display family (h1 / dict-word).
+$serif-stack:         "Literata", Georgia, "Times New Roman", serif;
+$serif-display-stack:  "Newsreader", "Literata", Georgia, "Times New Roman", serif;
 
 // Public family tokens — names kept stable so styles.scss + Bootstrap need no edits
 $font-family-sans-serif: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-$font-family-serif: $arno-text;
-$font-family-dict: $arno-display;   // dict-word is the display moment — Newsreader
+$font-family-serif: $serif-stack;
+$font-family-dict: $serif-display-stack;   // dict-word is the display moment
 $font-family-monospace: "Spline Sans Mono", "source-code-pro", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 
 $body-bg: #F9F8F6;
-$body-color: #242424;   // slightly darker ink — Arno at 400 reads lighter than Source did
+$body-color: #242424;   // slightly darker ink for body text
 $link-color: #8c1d40;
 $link-hover-color: darken($link-color, 12%);
 
@@ -38,12 +33,11 @@ $border-color: #dedad3;
 $accent-warm: #b5654a;        // borders / large / decoration only (4:1) — never small text
 $accent-warm-text: #84402c;   // AAA warm (7.2:1) for small warm text (e.g. card-link hover)
 
-// Literata's x-height is ~27% taller than Arno's (measured): optical
-// equivalence to the Arno 1.17rem setting is ~0.92rem; 0.98rem sits a
-// touch larger for screen readability. Taller x-height needs less leading.
+// Literata's tall x-height reads optically large — base + leading tuned
+// together for screen comfort.
 $font-size-base: 0.98rem;
 $line-height-base: 1.64;
-$headings-font-family: $arno-subhead;
+$headings-font-family: $serif-stack;
 $headings-font-weight: 600;
 $headings-color: $body-color;
 
@@ -52,8 +46,8 @@ $navbar-fg: #2B2B2B;
 $footer-bg: #F9F8F6;
 $footer-fg: #525252;
 
-// Interactive-table chrome (consumed by _caro-interactive-tables.scss —
-// previously hardcoded there, which made the table chrome un-themeable).
+// Interactive-table chrome — consumed by _caro-interactive-tables.scss
+// so the table surfaces stay themeable from this file.
 $table-header-bg: #f5f5f5;
 $table-header-border: #dee2e6;
 $chrome-btn-bg: #f1efea;      // neutral cream for Reset/Download/pagination buttons

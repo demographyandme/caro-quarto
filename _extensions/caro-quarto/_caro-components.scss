@@ -341,7 +341,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 }
 
 .caro-404-code {
-  font-family: $arno-display;
+  font-family: $serif-display-stack;
   font-size: $fs-giant;
   line-height: 1;
   margin: 0 0 0.5rem;
@@ -349,7 +349,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 }
 
 .caro-404-pun {
-  font-family: $arno-subhead;
+  font-family: $serif-stack;
   font-size: $fs-lg;
   line-height: 1.25;
   margin: 0 0 1.5rem;
