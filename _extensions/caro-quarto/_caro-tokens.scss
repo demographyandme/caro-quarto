@@ -61,7 +61,7 @@ $footnote-color: #4a4a4a;
 // EVERY font-size in the CARO partials and site styles must reference
 // one of these tokens — enforced by test-type-scale.R on the main site.
 // Role → step is the whole harmony contract; do not add ad-hoc sizes.
-$fs-root:    18px;                          // html root — defines what 1rem means everywhere
+$fs-root:    16px;                          // html root — one knob scaling the whole system (Literata's tall x-height wants a smaller root than Arno did)
 $fs-micro:   0.71rem;                       // uppercase kickers, year/date labels, chrome buttons
 $fs-caption: 0.75rem;                       // h4 captions, dict-ipa/pos, footer, badges
 $fs-ui:      0.79rem;                       // navbar, sidebar TOC, table cells/controls, profile links
