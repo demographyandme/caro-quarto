@@ -7,19 +7,22 @@
    the Google Fonts CSS API strips, and removes the third-party request.
    url()s resolve relative to THIS file: vendor fonts.css + the fonts beside
    it and reference via format.html.css so every page depth links correctly.
-   TODO before merge: subset to woff2 (pyftsubset --flavor=woff2, keep
-   smcp/c2sc/onum/pnum/tnum/lnum + latin-ext + IPA extensions). */
+   Subset woff2 (pyftsubset, layout-features='*', latin+ext+IPA); feature
+   retention verified: Literata+Fira carry smcp/onum/pnum/tnum/lnum;
+   Newsreader (display-only: h1/dict-word) has no smcp/onum by design;
+   Spline is a mono (figures inherently tabular). Contract test:
+   scripts/tests/site/test-font-features.R on the main site. */
 
 @font-face {
   font-family: "Literata";
-  src: url("Literata-var.ttf") format("truetype-variations");
+  src: url("Literata-var.woff2") format("woff2-variations");
   font-weight: 200 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Literata";
-  src: url("Literata-Italic-var.ttf") format("truetype-variations");
+  src: url("Literata-Italic-var.woff2") format("woff2-variations");
   font-weight: 200 900;
   font-style: italic;
   font-display: swap;
@@ -28,7 +31,7 @@
 /* Display-only: roman cut suffices (h1 / dict-word never set italic). */
 @font-face {
   font-family: "Newsreader";
-  src: url("Newsreader-var.ttf") format("truetype-variations");
+  src: url("Newsreader-var.woff2") format("woff2-variations");
   font-weight: 200 800;
   font-style: normal;
   font-display: swap;
@@ -36,28 +39,28 @@
 
 @font-face {
   font-family: "Fira Sans";
-  src: url("FiraSans-Regular.otf") format("opentype");
+  src: url("FiraSans-Regular.woff2") format("woff2");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fira Sans";
-  src: url("FiraSans-Italic.otf") format("opentype");
+  src: url("FiraSans-Italic.woff2") format("woff2");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
 }
 @font-face {
   font-family: "Fira Sans";
-  src: url("FiraSans-SemiBold.otf") format("opentype");
+  src: url("FiraSans-SemiBold.woff2") format("woff2");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Fira Sans";
-  src: url("FiraSans-Bold.otf") format("opentype");
+  src: url("FiraSans-Bold.woff2") format("woff2");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -65,14 +68,14 @@
 
 @font-face {
   font-family: "Spline Sans Mono";
-  src: url("SplineSansMono-var.ttf") format("truetype-variations");
+  src: url("SplineSansMono-var.woff2") format("woff2-variations");
   font-weight: 300 700;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "Spline Sans Mono";
-  src: url("SplineSansMono-Italic-var.ttf") format("truetype-variations");
+  src: url("SplineSansMono-Italic-var.woff2") format("woff2-variations");
   font-weight: 300 700;
   font-style: italic;
   font-display: swap;
