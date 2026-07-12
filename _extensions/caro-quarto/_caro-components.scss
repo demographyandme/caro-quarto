@@ -59,14 +59,14 @@ section.level2:has(.pub-cat-link-wrap) {
 .pub-url-link,
 .pub-pdf-link {
   font-family: $font-family-sans-serif;
-  font-size: 0.84rem;
+  font-size: $fs-ui;
   font-weight: var(--ui-weight);
   white-space: nowrap;
 }
 
 .pub-cat-link,
 .pub-back-link {
-  font-size: 0.8rem;
+  font-size: $fs-caption;
   color: $secondary;
   text-decoration-color: rgba($secondary, 0.45);
 }
@@ -146,7 +146,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  font-size: 1.06rem;
+  font-size: $fs-md;
   line-height: 1.58;
   padding: 1.25rem 1.25rem 1.3rem 0;
 }
@@ -157,7 +157,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 
 .project-card-summary {
   font-family: $font-family-sans-serif;
-  font-size: 0.98rem;
+  font-size: $fs-md;
   font-weight: 600;
   line-height: 1.4;
   color: $body-color;
@@ -183,7 +183,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 
 .project-card-provenance small {
   color: $secondary;
-  font-size: 0.78rem;
+  font-size: $fs-caption;
   letter-spacing: 0.01em;
 }
 
@@ -267,7 +267,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
   bottom: 0.6rem;
   left: 0.6rem;
   font-family: $font-family-sans-serif;
-  font-size: 0.82rem;
+  font-size: $fs-caption;
   font-weight: 600;
   letter-spacing: 0.01em;
   color: #fff;
@@ -308,7 +308,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 .footer-social-link {
   color: inherit;
   opacity: 0.88;
-  font-size: 1.1rem;
+  font-size: $fs-md;
   line-height: 1;
   text-decoration: none;
 }
@@ -323,14 +323,14 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
    AAA) plus the smaller size already reads as quiet/secondary. */
 .site-last-updated {
   display: inline-block;
-  font-size: 0.78rem;
+  font-size: $fs-caption;
   letter-spacing: 0.01em;
   margin-top: 0.15rem;
 }
 
 .site-provenance {
   font-family: var(--caro-font-mono, $font-family-monospace);
-  font-size: 0.9em;
+  font-size: $fs-rel-sm;
   letter-spacing: 0.02em;
 }
 
@@ -342,7 +342,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 
 .caro-404-code {
   font-family: $arno-display;
-  font-size: clamp(4rem, 12vw, 6rem);
+  font-size: $fs-giant;
   line-height: 1;
   margin: 0 0 0.5rem;
   color: $primary;
@@ -350,7 +350,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 
 .caro-404-pun {
   font-family: $arno-subhead;
-  font-size: clamp(1.15rem, 2.5vw, 1.3rem);
+  font-size: $fs-lg;
   line-height: 1.25;
   margin: 0 0 1.5rem;
   color: $body-color;
@@ -358,7 +358,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 
 .caro-404-body {
   font-family: $font-family-sans-serif;
-  font-size: 1rem;
+  font-size: $fs-md;
   line-height: 1.55;
   color: $secondary;
   max-width: 32rem;
@@ -369,7 +369,7 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
 /* Measure + centering from _caro-reading-frame (.content > p). */
 .visual-hub-tagline {
   font-family: $font-family-serif;
-  font-size: 1.15rem;
+  font-size: $fs-lg;
   line-height: 1.45;
   margin: 0 0 var(--space-md);
 }

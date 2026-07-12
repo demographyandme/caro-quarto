@@ -61,3 +61,22 @@ $status-ok: #006400;
 $status-error: #c00;
 $status-error-bg: #fee;
 $footnote-color: #4a4a4a;
+
+// ── Type scale ────────────────────────────────────────────────────
+// Closed modular ladder (base 0.9rem, ratio 1.125, one UI half-step).
+// EVERY font-size in the CARO partials and site styles must reference
+// one of these tokens — enforced by test-type-scale.R on the main site.
+// Role → step is the whole harmony contract; do not add ad-hoc sizes.
+$fs-root:    18px;                          // html root — defines what 1rem means everywhere
+$fs-micro:   0.71rem;                       // uppercase kickers, year/date labels, chrome buttons
+$fs-caption: 0.8rem;                        // h4 captions, dict-ipa/pos, footer, badges
+$fs-ui:      0.85rem;                       // navbar, sidebar TOC, table cells/controls, profile links
+$fs-body:    0.9rem;                        // prose, references, dict-def, lede
+$fs-md:      1.01rem;                       // h3, card/media titles
+$fs-lg:      1.14rem;                       // h2, large card titles
+$fs-display: 1.62rem;                       // dict-word headword
+$fs-hero:    clamp(1.9rem, 3.45vw, 2.55rem);   // h1
+$fs-giant:   clamp(4rem, 12vw, 6rem);          // 404 numeral
+$fs-code-em: 0.95em;                        // inline/pre code relative to context
+$fs-rel-sm:  0.85em;                        // relative small (sub-headers within components)
+

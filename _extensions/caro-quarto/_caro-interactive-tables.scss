@@ -9,7 +9,7 @@
    extras (layout, cursor) at the use site. */
 %caro-chrome-btn {
   font-family: $font-family-monospace;
-  font-size: 0.72rem;
+  font-size: $fs-micro;
   font-weight: 600;
   letter-spacing: 0.02em;
   color: $body-color;
@@ -23,26 +23,26 @@
 }
 
 #data :is(.phe-controls, .dtb-controls) .form-label {
-  font-size: 0.875rem;
+  font-size: $fs-ui;
   font-family: $font-family-sans-serif;
   font-weight: 600;
   margin-bottom: 0.35rem;
 }
 
 #data :is(.phe-controls, .dtb-controls) :is(.form-select, .form-control) {
-  font-size: 0.875rem;
+  font-size: $fs-ui;
   font-family: $font-family-sans-serif;
 }
 
 /* Table-notes are prose — keep sans-serif at reading size. */
 #data :is(.phe-table-notes, .dtb-table-notes) {
-  font-size: 0.875rem;
+  font-size: $fs-ui;
   font-family: $font-family-sans-serif;
 }
 
 /* Toolbar and pagination inherit the button typeface/size so all chrome is uniform. */
 #data :is(.phe-toolbar, .phe-pagination, .dtb-toolbar, .dtb-pagination) {
-  font-size: 0.72rem;
+  font-size: $fs-micro;
   font-family: $font-family-monospace;
 }
 
@@ -58,7 +58,7 @@
   background: $table-header-bg;
   border-bottom: 2px solid $table-header-border;
   font-family: $font-family-sans-serif;
-  font-size: 0.8rem;
+  font-size: $fs-caption;
   font-weight: 600;
   padding: 8px 6px;
   white-space: nowrap;
@@ -72,7 +72,7 @@
 #data :is(.phe-table, .dtb-table) td {
   padding: 6px 8px;
   font-family: $font-family-sans-serif;
-  font-size: 0.85rem;
+  font-size: $fs-ui;
   vertical-align: middle;
 }
 
@@ -96,7 +96,7 @@
 /* Pagination "Rows per page" label: single line, matching button type. */
 #data :is(.phe-pagination, .dtb-pagination) .form-label {
   font-family: $font-family-monospace;
-  font-size: 0.72rem;
+  font-size: $fs-micro;
   font-weight: 600;
   letter-spacing: 0.02em;
   white-space: nowrap;
@@ -106,7 +106,7 @@
 /* Page-size select: compact to match button height. */
 #data :is(.phe-pagination, .dtb-pagination) .form-select {
   font-family: $font-family-monospace;
-  font-size: 0.72rem;
+  font-size: $fs-micro;
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
 }
@@ -142,7 +142,7 @@
 }
 
 #data .phe-header-sub {
-  font-size: 0.85em;
+  font-size: $fs-rel-sm;
 }
 
 /* Stage / reference tables (e.g. WPP aging Table 1, Variables dictionary) */
@@ -153,7 +153,7 @@
 
 .phe-stage-caption {
   font-family: $font-family-sans-serif;
-  font-size: 0.88rem;
+  font-size: $fs-ui;
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #2B2B2B;
@@ -161,12 +161,12 @@
 
 .phe-stage-table .table {
   margin-bottom: 0.5rem;
-  font-size: 0.875rem;
+  font-size: $fs-ui;
 }
 
 .phe-stage-table .table thead th {
   font-family: $font-family-sans-serif;
-  font-size: 0.8rem;
+  font-size: $fs-caption;
   font-weight: 600;
   background: $table-header-bg;
   border-bottom: 2px solid $table-header-border;
@@ -187,7 +187,7 @@
 
 .phe-stage-table .table tbody td {
   font-family: $font-family-sans-serif;
-  font-size: 0.875rem;
+  font-size: $fs-ui;
   vertical-align: middle;
   padding: 5px 8px;
 }
@@ -198,7 +198,7 @@
 
 .phe-stage-footnote {
   font-family: $font-family-sans-serif;
-  font-size: 0.875rem;
+  font-size: $fs-ui;
   color: $footnote-color;
   margin-top: 0.4rem;
   line-height: 1.5;
@@ -223,7 +223,7 @@
 
 #trends .cell form {
   font-family: $font-family-sans-serif;
-  font-size: 0.875rem;
+  font-size: $fs-ui;
 }
 
 #trends .cell label {

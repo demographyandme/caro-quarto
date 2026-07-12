@@ -16,20 +16,20 @@
    .quarto-title .description hide-rule never matched this layout).
    Style it as a quiet serif deck instead. */
 #title-block-header .description {
-  font-size: 0.95em;
+  font-size: $fs-ui;
   color: $secondary;
   max-width: 42rem;
 }
 
 h1 {
   font-family: $arno-display;
-  font-size: clamp(1.9rem, 3.45vw, 2.55rem);
+  font-size: $fs-hero;
   line-height: 1.14;
   letter-spacing: -0.013em;   // display tier: tighter than the subhead default
 }
 
 h2 {
-  font-size: clamp(1.1rem, 1.55vw, 1.17rem);
+  font-size: $fs-lg;
   line-height: 1.22;
   padding-bottom: 0.42rem;
   border-bottom: 1px solid $accent-warm;
@@ -38,7 +38,7 @@ h2 {
 }
 
 h3 {
-  font-size: 0.99rem;
+  font-size: $fs-md;
   line-height: 1.3;
   margin-top: var(--space-lg);
   margin-bottom: var(--space-sm);
@@ -46,7 +46,7 @@ h3 {
 
 #quarto-document-content h4 {
   font-family: $font-family-sans-serif;
-  font-size: 0.81rem;
+  font-size: $fs-caption;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.012em;
@@ -57,28 +57,41 @@ h3 {
 
 .navbar {
   font-family: $font-family-sans-serif;
-  font-size: 0.84rem;
+  font-size: $fs-ui;
   font-weight: var(--ui-weight);
   border-bottom: 1px solid $border-color;
 }
 
 .navbar .navbar-brand {
   font-family: $headings-font-family;
-  font-size: 1.2rem;
+  font-size: $fs-lg;
   font-weight: 600;
   letter-spacing: -0.006em;
 }
 
 .nav-footer {
   font-family: $font-family-sans-serif;
-  font-size: 0.81rem;
+  font-size: $fs-caption;
   border-top: 1px solid $border-color;
+
+  // Quarto shrinks the three footer cells to .825em — keep them on the ladder.
+  .nav-footer-left,
+  .nav-footer-center,
+  .nav-footer-right {
+    font-size: inherit;
+  }
 }
 
 #quarto-margin-sidebar {
   font-family: $font-family-sans-serif;
-  font-size: 0.9rem;
+  font-size: $fs-ui;   // role: UI navigation, one step under prose
   line-height: 1.45;
+
+  // Quarto pins the TOC title + list to 0.875rem internally — inherit the ladder step.
+  nav[role="doc-toc"] > h2,
+  nav[role="doc-toc"] > ul {
+    font-size: inherit;
+  }
 
   .nav-link {
     padding-top: 0.2rem;
@@ -88,7 +101,7 @@ h3 {
 
 code, pre {
   font-family: $font-family-monospace;
-  font-size: 0.95em;
+  font-size: $fs-code-em;
 }
 
 .callout {
@@ -142,6 +155,7 @@ a:focus-visible,
 
 .btn {
   font-family: $font-family-sans-serif;
+  font-size: $fs-ui;   // Bootstrap derives .btn from $font-size-base — pin to the ladder
   font-weight: var(--ui-weight);
 }
 
@@ -187,7 +201,7 @@ a:focus-visible,
 
 .references .csl-entry,
 .csl-entry {
-  font-size: 0.88rem;
+  font-size: $fs-ui;
   line-height: 1.5;
   margin-bottom: var(--space-md);
 }
@@ -214,7 +228,7 @@ a:focus-visible,
 
 .dict-hero .dict-word {
   display: block;
-  font-size: 1.55rem;   /* display moment — Newsreader earns the size (scale contrast vs 0.9rem prose) */
+  font-size: $fs-display;   /* display moment — Newsreader earns the size (scale contrast vs 0.9rem prose) */
   font-weight: 600;
   line-height: 1.15;        /* tight headword box — no oversized gap before the IPA line */
   letter-spacing: -0.003em;
@@ -224,7 +238,7 @@ a:focus-visible,
 .dict-hero .dict-ipa {
   font-family: $font-family-sans-serif;
   font-weight: 400;
-  font-size: 0.78rem;
+  font-size: $fs-caption;
   color: $secondary;
 }
 
@@ -232,14 +246,14 @@ a:focus-visible,
   font-family: $font-family-sans-serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 0.78rem;
+  font-size: $fs-caption;
   margin-left: 0.3em;
   color: $secondary;
 }
 
 .dict-hero .dict-def {
   display: block;
-  font-size: 0.9rem;   /* = prose — a definition must not read smaller than body text */
+  font-size: $fs-body;   /* = prose — a definition must not read smaller than body text */
   font-weight: 400;
   line-height: 1.5;
   margin-top: var(--space-2xs);      /* even gap: IPA -> definition (matches headword -> IPA) */
