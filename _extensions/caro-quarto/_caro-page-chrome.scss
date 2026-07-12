@@ -11,10 +11,8 @@
   margin-bottom: var(--space-xs);
 }
 
-/* Page description under the title (hub/category pages render it as a
-   visible subtitle — direct child of #title-block-header, so the old
-   .quarto-title .description hide-rule never matched this layout).
-   Style it as a quiet serif deck instead. */
+/* Page description under the title: hub/category pages render it as a
+   direct child of #title-block-header — style as a quiet serif deck. */
 #title-block-header .description {
   font-size: $fs-ui;
   color: $secondary;
@@ -22,7 +20,7 @@
 }
 
 h1 {
-  font-family: $arno-display;
+  font-family: $serif-display-stack;
   font-size: $fs-hero;
   line-height: 1.14;
   letter-spacing: -0.013em;   // display tier: tighter than the subhead default
@@ -228,7 +226,7 @@ a:focus-visible,
 
 .dict-hero .dict-word {
   display: block;
-  font-size: $fs-display;   /* display moment — Newsreader earns the size (scale contrast vs 0.9rem prose) */
+  font-size: $fs-display;   /* the headword is the page's display moment */
   font-weight: 600;
   line-height: 1.15;        /* tight headword box — no oversized gap before the IPA line */
   letter-spacing: -0.003em;
@@ -253,7 +251,7 @@ a:focus-visible,
 
 .dict-hero .dict-def {
   display: block;
-  font-size: $fs-body;   /* = prose — a definition must not read smaller than body text */
+  font-size: $fs-body;   /* a definition must not read smaller than prose */
   font-weight: 400;
   line-height: 1.5;
   margin-top: var(--space-2xs);      /* even gap: IPA -> definition (matches headword -> IPA) */
