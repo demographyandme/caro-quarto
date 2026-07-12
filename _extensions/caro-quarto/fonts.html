@@ -1,9 +1,9 @@
-<!-- Typography served via Adobe Fonts (kit gtn3noi): Arno Pro (serif, optical
-     sizes), Myriad Pro (UI/sans), Source Code Pro (mono). Family slugs are used
-     in caro.scss. Adobe ToS: kit must load from the CDN (no self-hosting); the
-     kit ID is non-secret; open-domain (works on every companion + localhost).
-     Kit gtn3noi serves font-display: swap in @font-face rules (Adobe Fonts
-     project setting — no URL parameter). -->
-<link rel="preconnect" href="https://use.typekit.net" crossorigin>
-<link rel="preconnect" href="https://p.typekit.net" crossorigin>
-<link rel="stylesheet" href="https://use.typekit.net/gtn3noi.css">
+<!-- Typography is self-hosted: vendored fonts/ dir + fonts/fonts.css at each
+     site root (see caro-quarto/fonts/). fonts.css is wired via
+     format.html.css in each site's _quarto.yml so Quarto rewrites the link
+     per page depth; @font-face url()s resolve relative to the css file.
+     This include is kept (empty) so existing include-in-header lists keep
+     working across the fleet. Previous Adobe Fonts kit (gtn3noi) retired —
+     OFL upstream builds preserve the OpenType features (smcp/onum/tnum)
+     that both the Adobe kit's ToS-locked CDN and the Google Fonts CSS API
+     could not guarantee. -->

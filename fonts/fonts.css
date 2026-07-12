@@ -1,0 +1,79 @@
+/* CARO self-hosted typography (Google-Fonts-catalog families, upstream builds).
+   Serif text engine: Literata variable (opsz 7-72 replaces Arno's five hand
+   cuts via font-optical-sizing). Display serif: Newsreader (dict-word + h1
+   only). UI sans: Fira Sans (Myriad's humanist genre; IPA coverage). Mono:
+   Spline Sans Mono (purpose-built UI mono for table/button chrome).
+   All OFL. Self-hosting keeps the OpenType features (smcp/onum/tnum) that
+   the Google Fonts CSS API strips, and removes the third-party request.
+   url()s resolve relative to THIS file: vendor fonts.css + the fonts beside
+   it and reference via format.html.css so every page depth links correctly.
+   TODO before merge: subset to woff2 (pyftsubset --flavor=woff2, keep
+   smcp/c2sc/onum/pnum/tnum/lnum + latin-ext + IPA extensions). */
+
+@font-face {
+  font-family: "Literata";
+  src: url("Literata-var.ttf") format("truetype-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("Literata-Italic-var.ttf") format("truetype-variations");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Display-only: roman cut suffices (h1 / dict-word never set italic). */
+@font-face {
+  font-family: "Newsreader";
+  src: url("Newsreader-var.ttf") format("truetype-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Italic.otf") format("opentype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-SemiBold.otf") format("opentype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Bold.otf") format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Spline Sans Mono";
+  src: url("SplineSansMono-var.ttf") format("truetype-variations");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Spline Sans Mono";
+  src: url("SplineSansMono-Italic-var.ttf") format("truetype-variations");
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
