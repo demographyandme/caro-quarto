@@ -5,7 +5,7 @@
      has a low x-height (lowercase reads small for its point size), so it needs
      a larger root than a typical sans/transitional serif. Tune THIS one number
      to make everything bigger/smaller. (Quarto's default is 17px.) */
-  font-size: 18px;
+  font-size: $fs-root;
 
   --caro-measure: 42rem;        /* readable text column (~80 cpl at the Arno body size) */
   --caro-wide-measure: 60rem;   /* generous content frame: figures, tables, hero, data */
