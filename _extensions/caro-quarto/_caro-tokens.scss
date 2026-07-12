@@ -38,8 +38,11 @@ $border-color: #dedad3;
 $accent-warm: #b5654a;        // borders / large / decoration only (4:1) — never small text
 $accent-warm-text: #84402c;   // AAA warm (7.2:1) for small warm text (e.g. card-link hover)
 
-$font-size-base: 1.08rem;   // Literata's x-height sits between Source and Arno — first-pass retune
-$line-height-base: 1.7;
+// Literata's x-height is ~27% taller than Arno's (measured): optical
+// equivalence to the Arno 1.17rem setting is ~0.92rem; 0.98rem sits a
+// touch larger for screen readability. Taller x-height needs less leading.
+$font-size-base: 0.98rem;
+$line-height-base: 1.64;
 $headings-font-family: $arno-subhead;
 $headings-font-weight: 600;
 $headings-color: $body-color;
