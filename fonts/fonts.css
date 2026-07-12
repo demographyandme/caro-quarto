@@ -1,0 +1,82 @@
+/* CARO self-hosted typography (Google-Fonts-catalog families, upstream builds).
+   Serif text engine: Literata variable (opsz 7-72 replaces Arno's five hand
+   cuts via font-optical-sizing). Display serif: Newsreader (dict-word + h1
+   only). UI sans: Fira Sans (Myriad's humanist genre; IPA coverage). Mono:
+   Spline Sans Mono (purpose-built UI mono for table/button chrome).
+   All OFL. Self-hosting keeps the OpenType features (smcp/onum/tnum) that
+   the Google Fonts CSS API strips, and removes the third-party request.
+   url()s resolve relative to THIS file: vendor fonts.css + the fonts beside
+   it and reference via format.html.css so every page depth links correctly.
+   Subset woff2 (pyftsubset, layout-features='*', latin+ext+IPA); feature
+   retention verified: Literata+Fira carry smcp/onum/pnum/tnum/lnum;
+   Newsreader (display-only: h1/dict-word) has no smcp/onum by design;
+   Spline is a mono (figures inherently tabular). Contract test:
+   scripts/tests/site/test-font-features.R on the main site. */
+
+@font-face {
+  font-family: "Literata";
+  src: url("Literata-var.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Literata";
+  src: url("Literata-Italic-var.woff2") format("woff2-variations");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Display-only: roman cut suffices (h1 / dict-word never set italic). */
+@font-face {
+  font-family: "Newsreader";
+  src: url("Newsreader-var.woff2") format("woff2-variations");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Fira Sans";
+  src: url("FiraSans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Spline Sans Mono";
+  src: url("SplineSansMono-var.woff2") format("woff2-variations");
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Spline Sans Mono";
+  src: url("SplineSansMono-Italic-var.woff2") format("woff2-variations");
+  font-weight: 300 700;
+  font-style: italic;
+  font-display: swap;
+}
