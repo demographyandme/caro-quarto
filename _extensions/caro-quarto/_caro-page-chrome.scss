@@ -210,7 +210,7 @@ a:focus-visible,
 
 .references .csl-entry,
 .csl-entry {
-  font-size: $fs-ui;
+  font-size: $fs-body;   // references are primary reading content — body size, not UI
   line-height: 1.5;
   margin-bottom: var(--space-md);
 }
