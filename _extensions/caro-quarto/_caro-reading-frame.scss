@@ -93,6 +93,42 @@ body.research-companion .content > .companion-badges {
   margin-bottom: var(--space-md);
 }
 
+/* Companion content fills its grid column. With margin-inline: auto a grid item
+   is sized to fit its content and never below that content's min-content, so
+   one wide table (even inside .table-responsive) or display equation widened
+   main, and every heading and paragraph with it, past a phone's viewport: the
+   layout viewport grew and the whole page zoomed out. width: 100% holds main
+   to its column (max-width still caps it) and wide children scroll inside.
+   Companions only: main-site pages size main by content on purpose. */
+body:is(.research-companion, .visual-companion) .content {
+  width: 100%;
+}
+
+/* A scroll box stops its children's margins collapsing through it; zero the
+   outer child margins (each smaller than the wrapper's own) so the spacing
+   stays what it was. The id outranks `#quarto-document-content p`. */
+body.research-companion #quarto-document-content .caro-stage-table {
+  overflow-x: auto;
+
+  > :first-child { margin-top: 0; }
+  > :last-child { margin-bottom: 0; }
+}
+
+.content mjx-container[display="true"] {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+/* Quarto sizes the title block's author column to the longest name
+   (minmax(max-content, 1fr)), squeezing affiliations past the edge on a phone;
+   there the two columns share the width. Selector matches Quarto's. */
+@media (max-width: 575.98px) {
+  #title-block-header.quarto-title-block.default .quarto-title-meta-author {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+
 /* Any embedded viewer (sidebar + canvas) exceeds --caro-wide-measure and Quarto's
    body-content grid column (≈ 802px). When a visual companion page contains a viewer,
    widen main.content to span page-start/page-end so the iframe gets ~full page width

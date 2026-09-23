@@ -282,6 +282,19 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
   vertical-align: -0.1em;
 }
 
+/* Quarto's title-block ORCID link wraps a 10 px image: below the 24 px minimum
+   target (WCAG 2.2 target size; Lighthouse target-size). Pad the hit area to
+   24 px; the negative margins keep the icon where it sat and the line height. */
+#title-block-header a.quarto-title-author-orcid {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  margin: -7px -7px -7px -3px;
+  vertical-align: middle;
+}
+
 .footer-social-link[href*="orcid.org"]:hover .icon-orcid,
 .footer-social-link[href*="orcid.org"]:focus-visible .icon-orcid {
   filter: brightness(0.92);
