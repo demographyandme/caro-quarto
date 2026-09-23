@@ -4,13 +4,30 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.4.1
+
+- **Companion pages fit a phone.** `.content` had `margin-inline: auto`, so as a
+  grid item it sized to its content and never below that content's
+  min-content: one wide table (even inside `.table-responsive`) or display
+  equation widened the whole column past the viewport, and phones zoomed the
+  page out (aging and Brazil laid out at 696 px on a 412 px screen; the visual
+  pieces at up to 547 px). Companion `.content` now takes `width: 100%` of its
+  column; static stage tables and display equations scroll inside it. Main-site
+  pages are unchanged.
+- On phones the title block's author and affiliation columns share the width
+  (Quarto sized the author column to the longest name).
+- The title block's ORCID link has a 24 px target (was the 10 px image;
+  Lighthouse target-size), icon and line height unchanged.
+- Correction to 1.4.0 below: font downloads fell 50%, not 40% (40% was the
+  trial build).
+
 ## 1.4.0
 
 - **Fonts rebuilt** with `scripts/build-fonts.py` from the upstream sources:
   variable faces instanced to the weights the fleet draws (Literata 300–700,
   Newsreader 400–700, Spline Sans Mono 400–700), each face split into core,
   Latin Extended/IPA and symbols files by `unicode-range`, so a page loads only
-  what it uses. Across the fleet's 26 pages, font downloads fall 40% (every page
+  what it uses. Across the fleet's 26 pages, font downloads fall 50% (every page
   lighter), and characters the previous subset had dropped (Greek letters,
   arrows, subscripts) draw in CARO fonts again. File names change
   (`<Face>-{core,latn,sym}.woff2`): vendor `fonts/` with the extension.
