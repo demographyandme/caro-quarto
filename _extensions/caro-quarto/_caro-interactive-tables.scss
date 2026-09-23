@@ -1,8 +1,10 @@
 /* ── Interactive companion data tables (#data) ─────────────────────────────
-   Filterable JS tables in research companions. Class prefixes: .phe-* (WPP
-   aging and future PHE-style sites), .dtb-* (Brazil transition chapter).
-   New interactive companions: pick a prefix, reuse these rules, set
-   body-classes: research-companion — no local styles.scss for table chrome. */
+   Filterable JS tables in research companions, styled through shared classes
+   the table shell and companion code emit beside each companion's own prefix
+   (.phe-*, .dtb-*): caro-table-* for the filterable table, caro-stage-* for
+   static reference tables. A new interactive companion needs no rule here and
+   no local stylesheet for table chrome; this file names no companion prefix
+   (test-caro-theme-no-prefix.R on the main site). */
 
 /* Shared chrome-button treatment (Reset, Download, Previous, Next) — one
    source for the mono cream/secondary button; extend and add per-context
@@ -22,39 +24,39 @@
   &:hover { color: #fff; background: $secondary; border-color: $secondary; }
 }
 
-#data :is(.phe-controls, .dtb-controls) .form-label {
+#data .caro-table-controls .form-label {
   font-size: $fs-ui;
   font-family: $font-family-sans-serif;
   font-weight: 600;
   margin-bottom: 0.35rem;
 }
 
-#data :is(.phe-controls, .dtb-controls) :is(.form-select, .form-control) {
+#data .caro-table-controls :is(.form-select, .form-control) {
   font-size: $fs-ui;
   font-family: $font-family-sans-serif;
 }
 
 /* Table-notes are prose — keep sans-serif at reading size. */
-#data :is(.phe-table-notes, .dtb-table-notes) {
+#data .caro-table-notes {
   font-size: $fs-ui;
   font-family: $font-family-sans-serif;
 }
 
 /* Toolbar and pagination inherit the button typeface/size so all chrome is uniform. */
-#data :is(.phe-toolbar, .phe-pagination, .dtb-toolbar, .dtb-pagination) {
+#data :is(.caro-table-toolbar, .caro-table-pagination) {
   font-size: $fs-micro;
   font-family: $font-family-monospace;
 }
 
-#data :is(.phe-table-notes, .dtb-table-notes) p {
+#data .caro-table-notes p {
   margin-bottom: 0.4rem;
 }
 
-#data :is(.phe-table, .dtb-table) {
+#data .caro-table {
   margin-bottom: 0;
 }
 
-#data :is(.phe-table, .dtb-table) th {
+#data .caro-table th {
   background: $table-header-bg;
   border-bottom: 2px solid $table-header-border;
   font-family: $font-family-sans-serif;
@@ -64,37 +66,37 @@
   white-space: nowrap;
 }
 
-#data :is(.phe-table th.phe-col-num, .phe-table th.text-end, .dtb-col-text, .phe-col-text) {
+#data :is(.caro-table th.caro-table-col-num, .caro-table th.text-end, .caro-table-col-text) {
   font-family: $font-family-sans-serif;
   white-space: nowrap;
 }
 
-#data :is(.phe-table, .dtb-table) td {
+#data .caro-table td {
   padding: 6px 8px;
   font-family: $font-family-sans-serif;
   font-size: $fs-ui;
   vertical-align: middle;
 }
 
-#data :is(.phe-col-num, .dtb-col-num) {
+#data .caro-table-col-num {
   font-family: $font-family-sans-serif;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-#data :is(.phe-table, .dtb-table) td:first-child {
+#data .caro-table td:first-child {
   font-weight: 400;
 }
 
 /* All control buttons (Reset, Download, Previous, Next) share %caro-chrome-btn. */
-#data :is(.phe-pagination, .dtb-pagination) .btn,
-#data :is(.phe-toolbar, .dtb-toolbar) .btn {
+#data .caro-table-pagination .btn,
+#data .caro-table-toolbar .btn {
   @extend %caro-chrome-btn;
   white-space: nowrap;
 }
 
 /* Pagination "Rows per page" label: single line, matching button type. */
-#data :is(.phe-pagination, .dtb-pagination) .form-label {
+#data .caro-table-pagination .form-label {
   font-family: $font-family-monospace;
   font-size: $fs-micro;
   font-weight: 600;
@@ -104,27 +106,27 @@
 }
 
 /* Page-size select: compact to match button height. */
-#data :is(.phe-pagination, .dtb-pagination) .form-select {
+#data .caro-table-pagination .form-select {
   font-family: $font-family-monospace;
   font-size: $fs-micro;
   padding-top: 0.15rem;
   padding-bottom: 0.15rem;
 }
 
-#data :is(#phe-row-count, #dtb-row-count) {
+#data .caro-table-row-count {
   font-weight: 600;
   padding-left: 8px;
 }
 
-#data :is(#phe-row-count.phe-status-ok, #dtb-row-count.dtb-status-ok) {
+#data .caro-table-row-count.caro-table-status-ok {
   color: $status-ok;
 }
 
-#data :is(#phe-row-count.phe-status-error, #dtb-row-count.dtb-status-error) {
+#data .caro-table-row-count.caro-table-status-error {
   color: $status-error;
 }
 
-#data :is(.phe-error-banner, .dtb-error-banner) {
+#data .caro-table-error-banner {
   background: $status-error-bg;
   color: $status-error;
   padding: 12px;
@@ -132,26 +134,17 @@
   border: 2px solid $status-error;
 }
 
-#data .dtb-error-banner {
-  font-family: $font-family-monospace;
-  white-space: pre-wrap;
-}
-
-#data :is(.phe-reset-btn, .dtb-reset-btn) {
+#data .caro-table-reset-btn {
   margin-right: 8px;
 }
 
-#data .phe-header-sub {
-  font-size: $fs-rel-sm;
-}
-
 /* Stage / reference tables (e.g. WPP aging Table 1, Variables dictionary) */
-.phe-stage-table {
+.caro-stage-table {
   margin: 1.25rem 0 1.75rem;
   font-family: $font-family-sans-serif;
 }
 
-.phe-stage-caption {
+.caro-stage-caption {
   font-family: $font-family-sans-serif;
   font-size: $fs-ui;
   font-weight: 600;
@@ -159,12 +152,12 @@
   color: #2B2B2B;
 }
 
-.phe-stage-table .table {
+.caro-stage-table .table {
   margin-bottom: 0.5rem;
   font-size: $fs-ui;
 }
 
-.phe-stage-table .table thead th {
+.caro-stage-table .table thead th {
   font-family: $font-family-sans-serif;
   font-size: $fs-caption;
   font-weight: 600;
@@ -174,59 +167,32 @@
   padding: 7px 8px;
 }
 
-#quarto-document-content .phe-stage-table .table thead tr:first-child th {
+#quarto-document-content .caro-stage-table .table thead tr:first-child th {
   white-space: normal;
   line-height: 1.25;
   vertical-align: middle;
 }
 
-#quarto-document-content .phe-stage-table .table thead tr:nth-child(2) th {
+#quarto-document-content .caro-stage-table .table thead tr:nth-child(2) th {
   white-space: nowrap;
   vertical-align: middle;
 }
 
-.phe-stage-table .table tbody td {
+.caro-stage-table .table tbody td {
   font-family: $font-family-sans-serif;
   font-size: $fs-ui;
   vertical-align: middle;
   padding: 5px 8px;
 }
 
-.phe-stage-table .table tbody td:first-child {
+.caro-stage-table .table tbody td:first-child {
   font-weight: 400;
 }
 
-.phe-stage-footnote {
+.caro-stage-footnote {
   font-family: $font-family-sans-serif;
   font-size: $fs-ui;
   color: $footnote-color;
   margin-top: 0.4rem;
   line-height: 1.5;
-}
-
-/* ── DTB Trends — strip-panel time-series charts (#trends) ──────────────────
-   Observable Plot panels rendered by OJS cells in index.qmd.
-   Colors mirror caro-viewer-tokens.css (kept in sync with caro-tokens.scss). */
-
-#trends .dtb-strip-chart {
-  margin-bottom: 0.25rem;
-}
-
-#trends .dtb-download-btn {
-  @extend %caro-chrome-btn;
-  display: inline-flex;
-  align-items: center;
-  margin-top: 0.35rem;
-  margin-bottom: 0.25rem;
-  cursor: pointer;
-}
-
-#trends .cell form {
-  font-family: $font-family-sans-serif;
-  font-size: $fs-ui;
-}
-
-#trends .cell label {
-  font-weight: 600;
-  color: $body-color;
 }
