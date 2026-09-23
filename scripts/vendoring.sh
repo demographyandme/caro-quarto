@@ -12,6 +12,14 @@ caro_vendoring_copy() {
   if [[ ! -d "${_src}" ]]; then
     _src="${CARO_QUARTO_SRC}"
   fi
+  # Mirror, not overlay: a file removed or renamed upstream must not linger in
+  # the site (1.4.0 renamed every font file). Never clear a folder that is the
+  # source itself.
+  if [[ -d "${ROOT}/_extensions/caro-quarto" && "$(cd "${_src}" && pwd -P)" == "$(cd "${ROOT}/_extensions/caro-quarto" && pwd -P)" ]]; then
+    echo "caro vendoring: source and target are the same folder; nothing to do" >&2
+    return 0
+  fi
+  rm -rf "${ROOT}/_extensions/caro-quarto"
   mkdir -p "${ROOT}/_extensions/caro-quarto"
   cp -R "${_src}/." "${ROOT}/_extensions/caro-quarto/"
 
@@ -22,7 +30,8 @@ caro_vendoring_copy() {
   for _cand in "${CARO_QUARTO_SRC}/fonts" "${CARO_QUARTO_SRC}/../../fonts"; do
     if [[ -d "${_cand}" ]]; then _fonts="${_cand}"; break; fi
   done
-  if [[ -n "${_fonts}" ]]; then
+  if [[ -n "${_fonts}" && "$(cd "${_fonts}" && pwd -P)" != "$(cd "${ROOT}" && pwd -P)/fonts" ]]; then
+    rm -rf "${ROOT}/fonts"
     mkdir -p "${ROOT}/fonts"
     cp -R "${_fonts}/." "${ROOT}/fonts/"
   fi
