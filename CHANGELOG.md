@@ -1,9 +1,15 @@
 # Changelog
 
-All notable changes to the CARO Quarto theme. Versions match `_extension.yml`;
-bump on every change so `quarto update extension` refreshes consumers.
+All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
+and each release is tagged `v<version>`. Sites carry a committed copy of a
+release; see the README's *Maintaining* section.
 
-## 1.3.5
+## Unreleased
+
+- `scripts/build-fonts.py`: rebuilds the self-hosted fonts from the upstream
+  sources, deterministically (not yet used for a release).
+
+## 1.3.5 (tagged `v1.3.5`)
 
 - Publication references (`.csl-entry`) to body size — were a UI tier, below
   the reading size and inconsistent with the same references on the home page.
