@@ -87,11 +87,25 @@ Header includes: `fonts.html` (empty compat stub), `external-links.html`,
 
 ## Maintaining
 
-**Bump `_extension.yml` `version:` on every change.** Companions refresh via
-`quarto update extension demographyandme/caro-quarto`, which compares versions
-and **skips the download when the version is unchanged** — an unbumped edit
-silently leaves the fleet on stale vendored copies. Then re-vendor the committed
-copy into each consumer (the `scripts/vendoring.sh` helper copies the extension
-tree; the `fonts/` directory is vendored alongside it).
+A site renders the copy of the theme it **commits**: its `_quarto.yml` loads
+`_extensions/caro-quarto/caro.scss` by path. That committed copy is the site's
+pin. `quarto update extension demographyandme/caro-quarto` does not rewrite it
+(it installs a second copy under `_extensions/demographyandme/`, which nothing
+loads), so the demographyandme fleet does not run it in CI.
+
+A release:
+
+1. Change the theme; bump `version:` in `_extensions/caro-quarto/_extension.yml`
+   and add a `CHANGELOG.md` entry.
+2. If the fonts change, rebuild them from the upstream sources with
+   `python3 scripts/build-fonts.py` (deterministic; `--check-rebuild` proves it).
+3. Commit, then tag the commit `v<version>` (for example `v1.3.5`) and push the
+   tag, so a version names exact content.
+4. Vendor into every consumer: `scripts/vendoring.sh` copies the extension tree
+   and `fonts/` together. Commit in each site; nothing reaches a site until it
+   is vendored and committed there.
+
+The fleet's tests hold every site's committed theme and fonts to the tagged
+release its `_extension.yml` names.
 
 See [CHANGELOG.md](CHANGELOG.md) for version history.
