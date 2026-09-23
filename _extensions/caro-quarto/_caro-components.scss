@@ -26,8 +26,9 @@
      (home-page grid and lede, exact arrangement of "Recent updates" or
      "In the media" cards, one-off page layouts, local measure overrides,
      anything that is deliberately not meant to become the default for other
-     sites). Interactive companion table chrome (`.phe-*`, `.dtb-*`) lives
-     in this file — companions should not fork it locally.
+     sites). Interactive companion table chrome lives in
+     _caro-interactive-tables.scss, on shared caro-table-* / caro-stage-*
+     classes — companions should not fork it locally.
 
    Future extensions
    When a new pattern or polish on one site is judged worth making universal,
@@ -292,6 +293,15 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
   justify-content: flex-end;
   gap: 0.65rem;
   align-items: center;
+}
+
+/* Inline SVG icons (footer, media cards): sized and coloured by the text they
+   sit in, as the Bootstrap Icons font was, without downloading that font. */
+.caro-icon {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -0.125em;
 }
 
 .footer-social-link {

@@ -4,10 +4,24 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
-## Unreleased
+## 1.4.0
 
-- `scripts/build-fonts.py`: rebuilds the self-hosted fonts from the upstream
-  sources, deterministically (not yet used for a release).
+- **Fonts rebuilt** with `scripts/build-fonts.py` from the upstream sources:
+  variable faces instanced to the weights the fleet draws (Literata 300–700,
+  Newsreader 400–700, Spline Sans Mono 400–700), each face split into core,
+  Latin Extended/IPA and symbols files by `unicode-range`, so a page loads only
+  what it uses. Across the fleet's 26 pages, font downloads fall 40% (every page
+  lighter), and characters the previous subset had dropped (Greek letters,
+  arrows, subscripts) draw in CARO fonts again. File names change
+  (`<Face>-{core,latn,sym}.woff2`): vendor `fonts/` with the extension.
+- **Interactive tables** are styled through shared `caro-table-*` and
+  `caro-stage-*` classes instead of each companion's prefix, so a new
+  companion needs no theme change. Brazil-only trend and error-banner rules
+  moved to that companion. Dead `.phe-header-sub` rule removed.
+- `.caro-icon` for inline SVG icons (footer, media cards), replacing the
+  Bootstrap Icons font the footer alone loaded.
+- Monospace stack falls back to Fira Sans before system fonts, for the Greek
+  and arrows Spline Sans Mono lacks.
 
 ## 1.3.5 (tagged `v1.3.5`)
 
