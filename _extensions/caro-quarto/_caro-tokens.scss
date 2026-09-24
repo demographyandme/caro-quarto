@@ -12,9 +12,11 @@
 */
 
 // Serif stacks: one text family (opsz differentiates optical cuts) and
-// one display family (h1 / dict-word).
-$serif-stack:         "Literata", Georgia, "Times New Roman", serif;
-$serif-display-stack:  "Newsreader", "Literata", Georgia, "Times New Roman", serif;
+// one display family (h1 / dict-word). Each "... Fallback" is Georgia sized to
+// the web font (fonts/fonts.css), so text keeps its line breaks when the web
+// font arrives; it sits right after its web font so it is what shows meanwhile.
+$serif-stack:         "Literata", "Literata Fallback", Georgia, "Times New Roman", serif;
+$serif-display-stack:  "Newsreader", "Newsreader Fallback", "Literata", Georgia, "Times New Roman", serif;
 
 // Public family tokens — names kept stable so styles.scss + Bootstrap need no edits
 $font-family-sans-serif: "Fira Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;

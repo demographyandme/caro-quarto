@@ -6,6 +6,8 @@
    fleet draws. Each face is split in three: core (Latin-1, punctuation, common
    symbols), Latin Extended and IPA, and symbols (Greek, arrows, sub/superscripts,
    math, shapes); a page fetches only the files whose unicode-range it uses.
+   "Literata Fallback" and "Newsreader Fallback" are Georgia sized to each web
+   font, so text does not rewrap when the web font arrives.
    url()s resolve relative to this file. */
 
 @font-face {
@@ -223,4 +225,84 @@
   font-style: italic;
   font-display: swap;
   unicode-range: U+2070, U+2075-2079, U+2080-2089, U+212E, U+221E, U+2248;
+}
+@font-face {
+  font-family: "Literata Fallback";
+  src: local("Georgia");
+  font-weight: 100 499;
+  font-style: normal;
+  size-adjust: 106.9%;
+  ascent-override: 110.10%;
+  descent-override: 28.81%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Literata Fallback";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-weight: 500 900;
+  font-style: normal;
+  size-adjust: 95.7%;
+  ascent-override: 122.99%;
+  descent-override: 32.18%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Literata Fallback";
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  font-weight: 100 499;
+  font-style: italic;
+  size-adjust: 98.3%;
+  ascent-override: 119.74%;
+  descent-override: 31.33%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Literata Fallback";
+  src: local("Georgia Bold Italic"), local("Georgia-BoldItalic");
+  font-weight: 500 900;
+  font-style: italic;
+  size-adjust: 89.2%;
+  ascent-override: 131.95%;
+  descent-override: 34.53%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia");
+  font-weight: 100 499;
+  font-style: normal;
+  size-adjust: 98.3%;
+  ascent-override: 74.77%;
+  descent-override: 26.96%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia Bold"), local("Georgia-Bold");
+  font-weight: 500 900;
+  font-style: normal;
+  size-adjust: 84.5%;
+  ascent-override: 86.98%;
+  descent-override: 31.36%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia Italic"), local("Georgia-Italic");
+  font-weight: 100 499;
+  font-style: italic;
+  size-adjust: 95.8%;
+  ascent-override: 76.72%;
+  descent-override: 27.66%;
+  line-gap-override: 0.00%;
+}
+@font-face {
+  font-family: "Newsreader Fallback";
+  src: local("Georgia Bold Italic"), local("Georgia-BoldItalic");
+  font-weight: 500 900;
+  font-style: italic;
+  size-adjust: 82.5%;
+  ascent-override: 89.09%;
+  descent-override: 32.12%;
+  line-gap-override: 0.00%;
 }
