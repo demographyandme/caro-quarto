@@ -4,6 +4,18 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.4.3
+
+- **An embedded viewer's frame fits its content exactly.** `viewer-autoresize.html`
+  set a viewer's iframe to the height the viewer reported, but the iframe is
+  border-box with a 1px border, so it drew that border inside the height and
+  left the viewer 2px short: the last pixels were clipped, and a viewer that
+  measured its own frame reported the loss back and the frame crept down 2px
+  per resize. It now adds the iframe's border and padding when the iframe is
+  border-box. With dme-shared's matching client fix, the four visual pieces
+  hold their frames to their content within 0px through a sequence of window
+  widths from 375 to 1600px (`dme-shared/scripts/smoke-autoresize.mjs`).
+
 ## 1.4.2
 
 - **Text keeps its line breaks while the fonts load.** `fonts.css` declares
