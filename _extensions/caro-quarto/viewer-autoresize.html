@@ -36,7 +36,15 @@
     var iframes = document.querySelectorAll("iframe.visual-companion-viewer");
     for (var i = 0; i < iframes.length; i++) {
       if (iframes[i].contentWindow === e.source) {
-        var h = clamp(d.height) + "px";
+        // The viewer reports its content height. A border-box iframe draws its
+        // border and padding inside the height it is given, so add them: set to
+        // the bare content height, the frame left the viewer 2px short and
+        // clipped its last pixels.
+        var s = getComputedStyle(iframes[i]);
+        var frame = s.boxSizing === "border-box"
+          ? parseFloat(s.borderTopWidth) + parseFloat(s.borderBottomWidth) + parseFloat(s.paddingTop) + parseFloat(s.paddingBottom)
+          : 0;
+        var h = clamp(d.height + frame) + "px";
         iframes[i].style.height = h;
         iframes[i].style.minHeight = h;
         return;
