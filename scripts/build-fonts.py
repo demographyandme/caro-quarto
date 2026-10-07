@@ -22,10 +22,10 @@ Deterministic: the same sources give the same bytes (checked by --check-rebuild)
 
 Usage:
   python3 scripts/build-fonts.py --sources DIR --out DIR [--census census.json] [--check-rebuild]
-  python3 scripts/build-fonts.py --from-git 13826c3 --out DIR ...   # sources from caro-quarto history
+  python3 scripts/build-fonts.py --from-git e725422 --out DIR ...   # sources from caro-quarto history
 
 Sources: Literata 3.103, Newsreader 1.003, Fira Sans 4.106, Spline Sans Mono 1.004
-(OFL), as committed in 13826c3 and removed in 0b05d6c.
+(OFL), as committed in e725422 and removed in cfe6dd6.
 """
 import argparse, hashlib, io, json, os, subprocess, sys, tempfile
 
