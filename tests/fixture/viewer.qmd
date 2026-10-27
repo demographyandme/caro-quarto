@@ -1,0 +1,8 @@
+---
+title: "Viewer page"
+body-classes: research-companion
+---
+
+A research-companion page that embeds a visual-companion viewer.
+
+<iframe class="visual-companion-viewer" src="about:blank" title="Viewer"></iframe>

@@ -1,0 +1,11 @@
+---
+title: "CARO fixture"
+---
+
+Body text in Literata with an [external link](https://example.org/) and
+`inline code` in Spline Sans Mono.
+
+## A section
+
+- A list item
+- Another, with a formula: α ≤ β → γ.
