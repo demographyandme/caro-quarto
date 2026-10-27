@@ -19,7 +19,7 @@ fail=0
 err() { echo "::error::$*"; fail=1; }
 
 echo "== shellcheck, py_compile"
-shellcheck scripts/*.sh || err "shellcheck failed"
+shellcheck -x scripts/*.sh || err "shellcheck failed"
 python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' scripts/build-fonts.py \
   || err "scripts/build-fonts.py does not parse"
 
