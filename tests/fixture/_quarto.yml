@@ -1,0 +1,23 @@
+# CI fixture: a minimal site wired exactly as the README's "Use" section says,
+# with every header and body include. scripts/ci-check.sh vendors the theme into
+# a scratch copy of this folder (scripts/vendoring.sh) and renders it.
+project:
+  type: website
+  resources:
+    - fonts/
+
+website:
+  title: "CARO fixture"
+
+format:
+  html:
+    css: fonts/fonts.css
+    theme:
+      - default
+      - _extensions/caro-quarto/caro.scss
+    include-in-header:
+      - _extensions/caro-quarto/fonts.html
+      - _extensions/caro-quarto/external-links.html
+      - _extensions/caro-quarto/viewer-autoresize.html
+    include-before-body:
+      - _extensions/caro-quarto/skip-link.html

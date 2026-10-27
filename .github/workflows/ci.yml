@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      # The fleet's Quarto pin (my-academic-website scripts/ci/quarto-version.txt).
+      - name: Install Quarto CLI
+        timeout-minutes: 10
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2
+        with:
+          version: 1.10.19
+      # shellcheck, build-fonts.py syntax, version/CHANGELOG, fonts.css vs fonts/,
+      # and a render of tests/fixture/ with the vendored theme and every include.
+      - name: Run checks
+        run: bash scripts/ci-check.sh
