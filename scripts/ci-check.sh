@@ -19,7 +19,10 @@ fail=0
 err() { echo "::error::$*"; fail=1; }
 
 echo "== shellcheck, py_compile"
-shellcheck -x scripts/*.sh || err "shellcheck failed"
+# Each problem becomes an annotation, so a failure is readable without the raw log.
+if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh 2>&1); then
+  while IFS= read -r line; do err "shellcheck $(shellcheck --version | sed -n 's/^version: //p'): $line"; done <<<"$sc_out"
+fi
 python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' scripts/build-fonts.py \
   || err "scripts/build-fonts.py does not parse"
 
