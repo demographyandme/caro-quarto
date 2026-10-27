@@ -25,5 +25,12 @@ jobs:
           version: 1.10.19
       # shellcheck, build-fonts.py syntax, version/CHANGELOG, fonts.css vs fonts/,
       # and a render of tests/fixture/ with the vendored theme and every include.
+      # The runner image's shellcheck (0.9.0 on ubuntu-latest) flags patterns
+      # 0.11.0 accepts; pin the version the checks were written against.
+      - name: Install shellcheck 0.11.0
+        run: |
+          pipx install shellcheck-py==0.11.0.1
+          shellcheck --version | grep -qx 'version: 0.11.0'
+
       - name: Run checks
         run: bash scripts/ci-check.sh
