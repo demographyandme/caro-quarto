@@ -1,0 +1,7 @@
+# The font toolchain scripts/build-fonts.py is held to: with these versions,
+# `build-fonts.py --from-git e725422 --check-rebuild` reproduces the committed
+# fonts/ byte for byte (CI runs it). fontTools 4.62.1-4.67.0 all do; 4.68.0
+# writes different bytes for Literata and Newsreader (same code points).
+# brotli 1.2.0 and 1.2.1 give the same bytes.
+fonttools==4.67.0
+brotli==1.2.1

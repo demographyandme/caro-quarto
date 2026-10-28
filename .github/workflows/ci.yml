@@ -17,6 +17,8 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          # The font rebuild check reads the upstream sources from history (e725422).
+          fetch-depth: 0
       # The fleet's Quarto pin (my-academic-website scripts/ci/quarto-version.txt).
       - name: Install Quarto CLI
         timeout-minutes: 10
@@ -24,13 +26,20 @@ jobs:
         with:
           version: 1.10.19
       # shellcheck, build-fonts.py syntax, version/CHANGELOG, fonts.css vs fonts/,
-      # and a render of tests/fixture/ with the vendored theme and every include.
+      # a byte-identical rebuild of fonts/, and a render of tests/fixture/ with the vendored theme and every include.
       # The runner image's shellcheck (0.9.0 on ubuntu-latest) flags patterns
       # 0.11.0 accepts; pin the version the checks were written against.
       - name: Install shellcheck 0.11.0
         run: |
           pipx install shellcheck-py==0.11.0.1
           shellcheck --version | grep -qx 'version: 0.11.0'
+
+      # The fontTools that reproduces the committed fonts/ byte for byte.
+      - name: Install the font toolchain
+        run: |
+          python3 -m venv "$RUNNER_TEMP/fonts-venv"
+          "$RUNNER_TEMP/fonts-venv/bin/pip" install --quiet -r scripts/requirements-fonts.txt
+          echo "CARO_FONTS_PYTHON=$RUNNER_TEMP/fonts-venv/bin/python" >> "$GITHUB_ENV"
 
       - name: Run checks
         run: bash scripts/ci-check.sh
