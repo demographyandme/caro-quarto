@@ -1,0 +1,8 @@
+{
+  "name": "caro-quarto-browser-checks",
+  "private": true,
+  "description": "Browser checks run by scripts/ci-check.sh (tests/external-links-check.js).",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}

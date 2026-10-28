@@ -41,5 +41,15 @@ jobs:
           "$RUNNER_TEMP/fonts-venv/bin/pip" install --quiet -r scripts/requirements-fonts.txt
           echo "CARO_FONTS_PYTHON=$RUNNER_TEMP/fonts-venv/bin/python" >> "$GITHUB_ENV"
 
+      # tests/external-links-check.js runs the fixture's links in Chromium; the
+      # Playwright pin is tests/package.json (lockfile beside it).
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: 22
+      - name: Install Playwright and Chromium
+        timeout-minutes: 10
+        working-directory: tests
+        run: npm ci --no-audit --no-fund --ignore-scripts && npx --no-install playwright install --with-deps chromium
+
       - name: Run checks
         run: bash scripts/ci-check.sh
