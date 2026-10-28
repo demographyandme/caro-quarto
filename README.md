@@ -48,6 +48,14 @@ Research/visual companions additionally set `body-classes: research-companion`
 include `_extensions/caro-quarto/viewer-autoresize.html` (the parent side of the
 iframe auto-resize handshake).
 
+After `quarto render`, run the theme's HTML normalizer over the output (from the
+site's post-render script or CI); it fixes what Quarto's templates emit and SCSS
+cannot, for example the skip link, which Quarto places inside `<main>`:
+
+```sh
+bash _extensions/caro-quarto/caro-post-render.sh _site
+```
+
 ## Typography
 
 Self-hosted OFL families (upstream builds — the Google Fonts CSS API strips the
