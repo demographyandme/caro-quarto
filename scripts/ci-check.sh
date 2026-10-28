@@ -18,7 +18,10 @@
 #   6. tests/post-render: the HTML normalizer (caro-post-render.sh) matches its
 #      fixtures and is idempotent; on the rendered fixture it puts the skip link
 #      first in <body>.
-#   7. the theme renders: scripts/vendoring.sh copies the extension and fonts into
+#   7. tests/vendoring: scripts/vendoring.sh accepts only a CARO source, never
+#      mirrors a tree into or out of itself, and keeps the site's theme when a
+#      copy fails;
+#   8. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
 #      the theme's compiled rules and the served fonts; tests/external-links-check.js
@@ -35,7 +38,7 @@ trap 'rm -rf "$scratch"' EXIT
 
 echo "== shellcheck, py_compile"
 # Each problem becomes an annotation, so a failure is readable without the raw log.
-if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh _extensions/caro-quarto/caro-post-render.sh tests/post-render/run.sh 2>&1); then
+if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh _extensions/caro-quarto/caro-post-render.sh tests/post-render/run.sh tests/vendoring/run.sh 2>&1); then
   while IFS= read -r line; do err "shellcheck $(shellcheck --version | sed -n 's/^version: //p'): $line"; done <<<"$sc_out"
 fi
 python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' scripts/build-fonts.py \
@@ -110,6 +113,9 @@ fi
 
 echo "== post-render normalizer (tests/post-render)"
 bash tests/post-render/run.sh || err "tests/post-render: the normalizer output differs from the fixtures"
+
+echo "== vendoring (tests/vendoring)"
+bash tests/vendoring/run.sh || err "tests/vendoring: scripts/vendoring.sh copied from a bad source, into itself, or lost the theme on a failed copy"
 
 echo "== render fixture ($(quarto --version))"
 site="$scratch/site"
