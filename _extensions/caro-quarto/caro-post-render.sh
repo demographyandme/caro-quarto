@@ -18,6 +18,8 @@
 #     of <body> and make <main id="quarto-document-content"> focusable (-1).
 #   - validity: drop append-hash from <link> and role="link" from navbar
 #     dropdown toggles (Nu HTML checker error and redundant role).
+#   - fonts: fonts/fonts.css becomes the first stylesheet in <head>, after
+#     preloads of the core faces every page draws above the fold.
 set -euo pipefail
 
 DIR="${1:-}"
@@ -30,6 +32,9 @@ fi
 PERL='
 use strict; use warnings;
 my $status = 0;
+# Core (Latin-1) faces every fleet page draws in its first viewport, measured
+# per page type at 1280 and 412 px (main-site pages and research/visual pieces).
+my @PRELOAD = qw(Literata-core Newsreader-core FiraSans-Regular-core);
 FILE: for my $file (@ARGV) {
   open(my $in, "<:raw", $file) or die "caro-post-render: $file: $!\n";
   my $html = do { local $/; <$in> }; close $in;
@@ -57,6 +62,27 @@ FILE: for my $file (@ARGV) {
   }
   $html =~ s{(<main\b[^>]*\bid="quarto-document-content"[^>]*)>}{
     my $t = $1; $t =~ /\btabindex=/ ? "$t>" : "$t tabindex=\"-1\">" }e;
+
+  # fonts (Quarto pages only): fonts.css becomes the first stylesheet, preceded
+  # by preloads of the core faces, so the woff2 requests start with the HTML
+  # instead of after every Quarto stylesheet. Preload hrefs reuse the directory
+  # of the fonts.css href on the page, so depth (../) and root-absolute 404
+  # pages stay right.
+  if ($html =~ /<meta name="generator" content="quarto-/) {
+    my ($head, $rest) = split /(?=<\/head>)/, $html, 2;
+    my @css = ($head =~ /(<link rel="stylesheet" href="([^"]*)fonts\/fonts\.css">)/g);
+    if (@css > 2) { $fail->("more than one fonts.css link"); next FILE; }
+    if (@css && defined $rest) {
+      my ($tag, $dir) = @css;
+      $head =~ s/<link rel="preload" href="\Q${dir}\Efonts\/[^"]*" as="font" type="font\/woff2" crossorigin>\n//g;
+      $head =~ s/\Q$tag\E\n?//;
+      my $block = join "", map { "<link rel=\"preload\" href=\"${dir}fonts/$_.woff2\" as=\"font\" type=\"font/woff2\" crossorigin>\n" } @PRELOAD;
+      unless ($head =~ s/(?=<script\b[^>]*\bsrc=|<link\b[^>]*\brel="stylesheet")/$block$tag\n/) {
+        $head .= "$block$tag\n";
+      }
+      $html = $head . $rest;
+    }
+  }
 
   next FILE if $html eq $orig;
   open(my $out, ">:raw", $file) or die "caro-post-render: $file: $!\n";
