@@ -102,6 +102,8 @@ if (cd "$site" && quarto render --quiet); then
   done <<< "$preloads"
   perl -0777 -ne 'exit !/<head>(?:(?!<link[^>]*rel="stylesheet").)*<link rel="stylesheet" href="fonts\/fonts\.css">/s' "$out/index.html" \
     || err "index.html: fonts/fonts.css is not the first stylesheet after caro-post-render.sh"
+  ! grep -Eq '<script src="[^"]*(quarto-nav|headroom\.min|popper\.min|tippy\.umd\.min|bootstrap\.min)\.js"></script>' "$out/index.html" \
+    || err "index.html: a classic Quarto head script is not deferred after caro-post-render.sh"
   css=$(grep -o 'href="site_libs/bootstrap/bootstrap[^"]*\.min\.css"' "$out/index.html" | head -n 1 | sed 's/^href="//; s/"$//')
   if [[ -z "$css" || ! -f "$out/$css" ]]; then
     err "compiled bootstrap css not found"
