@@ -14,6 +14,9 @@
 #      every include), quarto renders it, and the output must carry each include,
 #      the theme's compiled rules and the served fonts; where Node has Playwright,
 #      tests/external-links-check.js then checks in Chromium which links open a new tab.
+#   6. tests/post-render: the HTML normalizer (caro-post-render.sh) matches its
+#      fixtures and is idempotent; on the rendered fixture it puts the skip link
+#      first in <body>.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -23,7 +26,7 @@ err() { echo "::error::$*"; fail=1; }
 
 echo "== shellcheck, py_compile"
 # Each problem becomes an annotation, so a failure is readable without the raw log.
-if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh 2>&1); then
+if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh _extensions/caro-quarto/caro-post-render.sh tests/post-render/run.sh 2>&1); then
   while IFS= read -r line; do err "shellcheck $(shellcheck --version | sed -n 's/^version: //p'): $line"; done <<<"$sc_out"
 fi
 python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' scripts/build-fonts.py \
@@ -64,6 +67,9 @@ SCSS
   rm -rf "$sass_dir"
 fi
 
+echo "== post-render normalizer (tests/post-render)"
+bash tests/post-render/run.sh || err "tests/post-render: the normalizer output differs from the fixtures"
+
 echo "== render fixture ($(quarto --version))"
 site=$(mktemp -d)
 trap 'rm -rf "$site"' EXIT
@@ -86,6 +92,9 @@ if (cd "$site" && quarto render --quiet); then
   must index.html 'caro-viewer-height'              "viewer-autoresize.html include missing"
   must index.html 'href="fonts/fonts.css"'          "fonts/fonts.css not linked"
   must viewer.html 'class="[^"]*research-companion' "body-classes: research-companion not applied"
+  bash _extensions/caro-quarto/caro-post-render.sh "$out" || err "caro-post-render.sh failed on the rendered fixture"
+  perl -0777 -ne 'exit !/<body\b[^>]*>\s*<a\b[^>]*class="skip-link"/' "$out/index.html" \
+    || err "index.html: after caro-post-render.sh the skip link is not the first child of <body>"
   css=$(grep -o 'href="site_libs/bootstrap/bootstrap[^"]*\.min\.css"' "$out/index.html" | head -n 1 | sed 's/^href="//; s/"$//')
   if [[ -z "$css" || ! -f "$out/$css" ]]; then
     err "compiled bootstrap css not found"

@@ -1,1 +1,14 @@
 <a href="#quarto-document-content" class="skip-link">Skip to main content</a>
+<script>
+// quarto-nav.js rewrites every link to an absolute URL without index.html, so on
+// /dir/index.html this link pointed at /dir/#quarto-document-content and did not
+// move focus. Move focus to the target in place instead of following the href.
+document.addEventListener("click", function (e) {
+  var link = e.target.closest ? e.target.closest("a.skip-link") : null;
+  var main = link ? document.getElementById("quarto-document-content") : null;
+  if (!main) return;
+  e.preventDefault();
+  if (!main.hasAttribute("tabindex")) main.setAttribute("tabindex", "-1");
+  main.focus();
+});
+</script>

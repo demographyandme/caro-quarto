@@ -139,7 +139,9 @@ a:focus-visible,
 
 /* Skip-to-content link: first focusable element on the page; off-screen until
    it receives keyboard focus, then slides into the top-left. Paired with the
-   skip-link.html before-body include and #quarto-document-content as target. */
+   skip-link.html before-body include and #quarto-document-content as target.
+   Quarto puts that include inside <main>; caro-post-render.sh moves the link to
+   the start of <body>, which is what makes it the first focusable element. */
 .skip-link {
   position: absolute;
   left: 0.5rem;
