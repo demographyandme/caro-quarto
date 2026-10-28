@@ -1,0 +1,9 @@
+{
+  "name": "caro-reflow-check",
+  "private": true,
+  "type": "module",
+  "description": "CARO's reflow gate (caro-reflow-check.mjs): every built page must be no wider than the viewport at 320, 375 and 1280 CSS px.",
+  "dependencies": {
+    "playwright": "1.63.0"
+  }
+}
