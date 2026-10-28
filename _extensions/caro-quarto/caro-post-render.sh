@@ -16,6 +16,8 @@
 #   - skip link: Quarto puts include-before-body inside <main>, after the navbar
 #     and the TOC, so skip-link.html skipped nothing. Move it to the first child
 #     of <body> and make <main id="quarto-document-content"> focusable (-1).
+#   - validity: drop append-hash from <link> and role="link" from navbar
+#     dropdown toggles (Nu HTML checker error and redundant role).
 set -euo pipefail
 
 DIR="${1:-}"
@@ -37,6 +39,11 @@ FILE: for my $file (@ARGV) {
   # navbar (the same substitution sites ran as scripts/strip-navbar-menu-role.sh)
   $html =~ s/(<button class="navbar-toggler[^>]*?) role="menu"/$1/g;
   $html =~ s/(<nav class="navbar[^"]*")(?![^>]*aria-label)/$1 aria-label="Site"/g;
+
+  # append-hash is not an HTML attribute (Nu validator error; no script reads
+  # it), and role="link" on an <a href> dropdown toggle repeats its implicit role
+  $html =~ s/(<link\b[^>]*?) append-hash="[^"]*"/$1/g;
+  $html =~ s{(<a\b[^>]*>)}{ my $t = $1; $t =~ s/ role="link"// if $t =~ /\bclass="[^"]*\bdropdown-toggle\b/; $t }ge;
 
   # skip link: first child of <body>; its target takes programmatic focus
   my @skip = ($html =~ /(<a\b[^>]*\bclass="skip-link"[^>]*>.*?<\/a>)/gs);
