@@ -95,6 +95,13 @@ if (cd "$site" && quarto render --quiet); then
   bash _extensions/caro-quarto/caro-post-render.sh "$out" || err "caro-post-render.sh failed on the rendered fixture"
   perl -0777 -ne 'exit !/<body\b[^>]*>\s*<a\b[^>]*class="skip-link"/' "$out/index.html" \
     || err "index.html: after caro-post-render.sh the skip link is not the first child of <body>"
+  preloads=$(grep -o '<link rel="preload" href="[^"]*" as="font"' "$out/index.html" | sed 's/^<link rel="preload" href="//; s/" as="font"$//')
+  [[ -n "$preloads" ]] || err "index.html: no font preload after caro-post-render.sh"
+  while IFS= read -r f; do
+    [[ -z "$f" || -f "$out/$f" ]] || err "index.html preloads $f, which the rendered site does not serve"
+  done <<< "$preloads"
+  perl -0777 -ne 'exit !/<head>(?:(?!<link[^>]*rel="stylesheet").)*<link rel="stylesheet" href="fonts\/fonts\.css">/s' "$out/index.html" \
+    || err "index.html: fonts/fonts.css is not the first stylesheet after caro-post-render.sh"
   css=$(grep -o 'href="site_libs/bootstrap/bootstrap[^"]*\.min\.css"' "$out/index.html" | head -n 1 | sed 's/^href="//; s/"$//')
   if [[ -z "$css" || ! -f "$out/$css" ]]; then
     err "compiled bootstrap css not found"
