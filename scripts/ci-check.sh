@@ -81,6 +81,7 @@ if (cd "$site" && quarto render --quiet); then
   must index.html 'class="skip-link"'               "skip-link.html include missing"
   must index.html 'demographyandme\\.com'           "external-links.html include missing"
   must index.html 'site_libs/quarto-nav/'           "external-links.html: site-root lookup (site_libs/quarto-nav/) missing"
+  must index.html 'opens in a new tab'              "external-links.html: new-tab cue missing"
   must links.html 'class="skip-link"'               "links.html (link cases) not rendered"
   must index.html 'caro-viewer-height'              "viewer-autoresize.html include missing"
   must index.html 'href="fonts/fonts.css"'          "fonts/fonts.css not linked"
@@ -96,6 +97,7 @@ if (cd "$site" && quarto render --quiet); then
     # A viewer iframe cannot fragment across printed pages, so print leaves it out.
     grep -q '@media print{[^@]*\.visual-companion-viewer{display:none' "$out/$css" \
       || err "print rule hiding .visual-companion-viewer missing from compiled css"
+    grep -q '\.visually-hidden' "$out/$css" || err ".visually-hidden (external-links.html cue) missing from compiled css"
   fi
   while IFS= read -r f; do
     [[ -z "$f" || -f "$out/fonts/$f" ]] || err "rendered site does not serve fonts/$f"
