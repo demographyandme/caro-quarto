@@ -42,7 +42,8 @@ jobs:
           echo "CARO_FONTS_PYTHON=$RUNNER_TEMP/fonts-venv/bin/python" >> "$GITHUB_ENV"
 
       # tests/external-links-check.js runs the fixture's links in Chromium; the
-      # Playwright pin is tests/package.json (lockfile beside it).
+      # Playwright pin is tests/package.json (lockfile beside it). tests/reflow
+      # installs the reflow gate's own copy (the same pin) and uses this Chromium.
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
         with:
           node-version: 22

@@ -29,6 +29,12 @@
 #      the theme's compiled rules and the served fonts; tests/external-links-check.js
 #      then checks in Chromium which links open a new tab (CI fails without
 #      Playwright, tests/package.json; a local run without it skips).
+#  10. the reflow gate (_extensions/caro-quarto/reflow/caro-reflow-check.mjs, which
+#      the fleet's CI runs on every built site): tests/reflow installs it as a
+#      caller does and checks it on fixture pages (a 332 px page fails at 320 px
+#      and is named), then on the rendered fixture at 320, 375 and 1280 px; Quarto
+#      must not copy it into _site. CI fails without Node, the npm install or
+#      Chromium; a local run without them skips.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -40,7 +46,7 @@ trap 'rm -rf "$scratch"' EXIT
 
 echo "== shellcheck, py_compile"
 # Each problem becomes an annotation, so a failure is readable without the raw log.
-if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh _extensions/caro-quarto/caro-post-render.sh tests/post-render/run.sh tests/vendoring/run.sh tests/release-tag/run.sh 2>&1); then
+if ! sc_out=$(shellcheck -x -f gcc scripts/*.sh _extensions/caro-quarto/caro-post-render.sh tests/post-render/run.sh tests/vendoring/run.sh tests/release-tag/run.sh tests/reflow/run.sh 2>&1); then
   while IFS= read -r line; do err "shellcheck $(shellcheck --version | sed -n 's/^version: //p'): $line"; done <<<"$sc_out"
 fi
 python3 -c 'import ast, sys; ast.parse(open(sys.argv[1]).read(), sys.argv[1])' scripts/build-fonts.py \
@@ -186,6 +192,20 @@ if (cd "$site" && quarto render --quiet); then
           echo "::notice::external-links browser check skipped (no Node, Playwright or Chromium)"
         fi ;;
     *) err "external-links browser check failed (tests/external-links-check.js)" ;;
+  esac
+  # The theme's reflow gate ships in _extensions/ and must stay out of the output.
+  ! find "$out" -name caro-reflow-check.mjs -o -name reflow | grep -q . \
+    || err "_site carries the reflow gate's files (Quarto copied _extensions/caro-quarto/reflow/)"
+  rc=0
+  bash tests/reflow/run.sh "$out" || rc=$?
+  case $rc in
+    0) ;;
+    77) if [[ "${GITHUB_ACTIONS:-}" == true ]]; then
+          err "reflow gate check could not run (no Node, npm install of _extensions/caro-quarto/reflow, or Chromium)"
+        else
+          echo "::notice::reflow gate check skipped (no Node, npm install or Chromium)"
+        fi ;;
+    *) err "tests/reflow: the reflow gate misjudged a fixture page, or the rendered fixture is wider than the viewport" ;;
   esac
 else
   err "quarto render of tests/fixture failed"
