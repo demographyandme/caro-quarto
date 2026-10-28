@@ -11,7 +11,8 @@
 // with target=_blank by kind, and reads the accessible name of every link the
 // script marked (a target="_blank" written in the page source is left alone).
 // --assert exits 1 unless: the script marks no in-page or same-site link; every
-// external and cross-companion link does. Exit 77 when Playwright or its Chromium is missing.
+// external and cross-companion link does; every marked link's name carries the
+// cue exactly once. Exit 77 when Playwright or its Chromium is missing.
 "use strict";
 
 const fs = require("fs");
@@ -115,6 +116,10 @@ const SKIP = ".navbar, .quarto-navbar, .nav-footer, footer.page-footer, .dropdow
         if ((l.kind === "inpage" || l.kind === "samesite") && l.marked && !l.card) failures.push(`${name}: ${l.kind} link opens a new tab: ${l.href}`);
         if ((l.kind === "external" || l.kind === "cross") && !l.blank) failures.push(`${name}: ${l.kind} link stays in the tab: ${l.href}`);
         if (l.kind === "dme" && l.marked && !l.card) failures.push(`${name}: demographyandme.com link opens a new tab: ${l.href}`);
+      }
+      for (const n of names) {
+        const hits = (n.name.match(/new (tab|window)/gi) || []).length;
+        if (hits !== 1) failures.push(`${name}: marked link name has the cue ${hits} times: "${n.name}" <- ${n.href}`);
       }
     }
     await page.close();

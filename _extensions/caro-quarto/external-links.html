@@ -3,6 +3,8 @@
   "use strict";
 
   var INTERNAL = /^(www\.)?demographyandme\.com$/i;
+  var CUE = "(opens in a new tab)";
+  var HAS_CUE = /new (tab|window)/i;
 
   function shouldSkip(a) {
     if (a.hasAttribute("data-skip-external")) return true;
@@ -37,9 +39,33 @@
     return u.pathname.indexOf(root.pathname) === 0 || u.pathname + "/" === root.pathname;
   }
 
+  /* New-tab cue for screen readers only (WCAG G201), added once. A text link
+     gets it in aria-label (its visible text, then the cue): a hidden span
+     appended inside the link re-wraps text-wrap: pretty paragraphs. A link with
+     an image keeps its alt text as name and gets a .visually-hidden span. */
+  function addCue(a) {
+    if (a.querySelector(".caro-newtab-cue")) return;
+    var label = a.getAttribute("aria-label");
+    if (label !== null) {
+      if (!HAS_CUE.test(label)) a.setAttribute("aria-label", label + " " + CUE);
+      return;
+    }
+    var text = a.textContent.replace(/\s+/g, " ").trim();
+    if (HAS_CUE.test(text) || HAS_CUE.test(a.getAttribute("title") || "")) return;
+    if (text && !a.querySelector("img, svg, picture, video, canvas")) {
+      a.setAttribute("aria-label", text + " " + CUE);
+      return;
+    }
+    var cue = document.createElement("span");
+    cue.className = "visually-hidden caro-newtab-cue";
+    cue.textContent = " " + CUE;
+    a.appendChild(cue);
+  }
+
   function markNewTab(a) {
     a.setAttribute("target", "_blank");
     a.setAttribute("rel", "noopener noreferrer");
+    addCue(a);
   }
 
   function applyExternalLinks() {

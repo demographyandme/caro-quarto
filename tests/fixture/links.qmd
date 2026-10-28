@@ -15,7 +15,8 @@ rendered site under a sub-path and checks which ones open a new tab.
 ```{=html}
 <p><a href="../other-companion/">Another companion</a> ·
 <a class="project-card-link" href="https://example.org/card">Project card</a> ·
-<a href="https://example.org/labelled" aria-label="Labelled link">Labelled</a></p>
+<a href="https://example.org/labelled" aria-label="Labelled link">Labelled</a> ·
+<a href="https://example.org/figure"><img src="data/figure.svg" alt="Figure link" width="16" height="16"></a></p>
 ```
 
 ```{.r code-line-numbers="true"}
