@@ -20,6 +20,7 @@
 #     dropdown toggles (Nu HTML checker error and redundant role).
 #   - fonts: fonts/fonts.css becomes the first stylesheet in <head>, after
 #     preloads of the core faces every page draws above the fold.
+#   - scripts: defer the five classic Quarto head scripts.
 set -euo pipefail
 
 DIR="${1:-}"
@@ -83,6 +84,11 @@ FILE: for my $file (@ARGV) {
       $html = $head . $rest;
     }
   }
+
+  # The five classic head scripts block parsing. Every use of their
+  # globals (Headroom, bootstrap, tippy) runs from a DOMContentLoaded handler or
+  # a click, and deferred scripts run, in order, before DOMContentLoaded.
+  $html =~ s{(<script src="[^"]*/(?:quarto-nav/quarto-nav\.js|quarto-nav/headroom\.min\.js|quarto-html/popper\.min\.js|quarto-html/tippy\.umd\.min\.js|bootstrap/bootstrap\.min\.js)")></script>}{$1 defer></script>}g;
 
   next FILE if $html eq $orig;
   open(my $out, ">:raw", $file) or die "caro-post-render: $file: $!\n";
