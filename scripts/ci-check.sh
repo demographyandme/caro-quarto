@@ -90,6 +90,9 @@ if (cd "$site" && quarto render --quiet); then
     grep -q 'body\.research-companion' "$out/$css" || err "theme rules (body.research-companion) missing from compiled css"
     # The root size is relative, so a reader's browser font-size setting scales every rem.
     grep -q ':root{font-size:[0-9.]*%' "$out/$css" || err "root font-size is not a percentage (\$fs-root must follow the reader's default size)"
+    # A viewer iframe cannot fragment across printed pages, so print leaves it out.
+    grep -q '@media print{[^@]*\.visual-companion-viewer{display:none' "$out/$css" \
+      || err "print rule hiding .visual-companion-viewer missing from compiled css"
   fi
   while IFS= read -r f; do
     [[ -z "$f" || -f "$out/fonts/$f" ]] || err "rendered site does not serve fonts/$f"
