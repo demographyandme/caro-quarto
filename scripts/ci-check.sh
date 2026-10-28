@@ -177,6 +177,9 @@ if (cd "$site" && quarto render --quiet); then
     grep -q '@media print{[^@]*\.visual-companion-viewer{display:none' "$out/$css" \
       || err "print rule hiding .visual-companion-viewer missing from compiled css"
     grep -q '\.visually-hidden' "$out/$css" || err ".visually-hidden (external-links.html cue) missing from compiled css"
+    # Reflow (W3-13, SC 1.4.10): a long URL as link text breaks instead of widening the page.
+    grep -q '#quarto-document-content a{overflow-wrap:break-word}' "$out/$css" \
+      || err "#quarto-document-content a overflow-wrap:break-word (long links) missing from compiled css"
   fi
   while IFS= read -r f; do
     [[ -z "$f" || -f "$out/fonts/$f" ]] || err "rendered site does not serve fonts/$f"

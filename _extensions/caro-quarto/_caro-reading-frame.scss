@@ -114,6 +114,17 @@ body.research-companion #quarto-document-content .caro-stage-table {
   > :last-child { margin-bottom: 0; }
 }
 
+/* A long unbroken URL as link text (DOIs, data-portal and report links in the
+   references and citation) is one word as wide as itself: up to 1054 px, wider
+   than a 1280 px page's column, so the page scrolled sideways (W3-13, SC 1.4.10).
+   break-word breaks such a word only where it would overflow its line and leaves
+   min-content alone, so links that fit and tables sized by content are unchanged.
+   Links only: on all text it also split a date ("Septemb|er") that overhangs its
+   narrow column on the home page without widening the page. */
+#quarto-document-content a {
+  overflow-wrap: break-word;
+}
+
 .content mjx-container[display="true"] {
   max-width: 100%;
   overflow-x: auto;
