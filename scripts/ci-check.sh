@@ -6,7 +6,8 @@
 #   1. the shell scripts pass shellcheck; scripts/build-fonts.py compiles;
 #   2. release bookkeeping: _extension.yml's version is the newest CHANGELOG entry;
 #   3. fonts: every url() in fonts/fonts.css names a committed file and every
-#      committed woff2 is declared there (a renamed or dropped face fails);
+#      committed woff2 is declared there (a renamed or dropped face fails), and
+#      every family/style a Fallback face covers has a web face;
 #   4. the fonts are reproducible: scripts/build-fonts.py rebuilds them from the
 #      upstream sources in git (FONT_SOURCES) and the build must equal fonts/
 #      byte for byte. Needs the fontTools pinned in scripts/requirements-fonts.txt
@@ -54,6 +55,15 @@ done <<< "$declared"
 for f in fonts/*.woff2; do
   grep -qxF "${f#fonts/}" <<< "$declared" || err "$f is not declared in fonts/fonts.css"
 done
+# Every style a fallback stands in for has a web face: otherwise the browser
+# synthesizes it from another style once the web font loads (AB-12).
+python3 - fonts/fonts.css <<'PY' || err "fonts/fonts.css: a fallback's family/style has no web face"
+import re, sys
+faces = {(m[0], m[1]) for m in re.findall(r'font-family: "([^"]+)";[^}]*?font-style: (\w+);', open(sys.argv[1]).read())}
+missing = sorted(f"{fam[:-9]} {style}" for fam, style in faces if fam.endswith(" Fallback") and (fam[:-9], style) not in faces)
+for m in missing: print(f"no web face for {m}")
+sys.exit(1 if missing else 0)
+PY
 
 echo "== font rebuild"
 FONT_SOURCES=e725422   # the commit holding the upstream .ttf/.otf (build-fonts.py docstring)

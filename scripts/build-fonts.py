@@ -13,7 +13,8 @@ browser fetches a file only for a page that contains one of its characters:
          geometric shapes, dingbats (the formulas in running text).
 
 Coverage is the union of what the previous build shipped (the three files of
-each face in --previous, by default the committed fonts/), what the fleet's
+each face in --previous, by default the committed fonts/; for a new face, what
+its CSS family's other faces ship), what the fleet's
 pages were found to use (census) and Latin-1, limited to what the source
 actually has, so no page loses a glyph it had and pages regain the glyphs the
 old subset dropped. Latin-1 is a hard floor: a build can never ship a core file
@@ -48,6 +49,7 @@ FACES = [
     ("Literata",               "Literata-var.ttf",               "Literata",         "normal", "300 700", (300, 700)),
     ("Literata-Italic",        "Literata-Italic-var.ttf",        "Literata",         "italic", "300 700", (300, 700)),
     ("Newsreader",             "Newsreader-var.ttf",             "Newsreader",       "normal", "400 700", (400, 700)),
+    ("Newsreader-Italic",      "Newsreader-Italic-var.ttf",      "Newsreader",       "italic", "400 700", (400, 700)),
     ("FiraSans-Regular",       "FiraSans-Regular.otf",           "Fira Sans",        "normal", "400",     None),
     ("FiraSans-Italic",        "FiraSans-Italic.otf",            "Fira Sans",        "italic", "400",     None),
     ("FiraSans-SemiBold",      "FiraSans-SemiBold.otf",          "Fira Sans",        "normal", "600",     None),
@@ -191,7 +193,10 @@ def build(sources, out, previous, needs):
             font = roundtrip(instancer.instantiateVariableFont(font, {"wght": wght}))
         prev_files = previous_files(previous, face)
         prev_cmap = set().union(*(TTFont(f).getBestCmap() for f in prev_files))
-        want = FLOOR | prev_cmap | needs.get(family, set()) | {cp for cp in src_cmap if in_blocks(cp, LATN_BLOCKS + SYM_BLOCKS)}
+        # A face new to this build starts from what its family already ships.
+        family_cmap = set() if prev_files else set().union(
+            *(TTFont(f).getBestCmap() for g in FACES if g[2] == family for f in previous_files(previous, g[0])))
+        want = FLOOR | prev_cmap | family_cmap | needs.get(family, set()) | {cp for cp in src_cmap if in_blocks(cp, LATN_BLOCKS + SYM_BLOCKS)}
         cover = want & src_cmap
         if FLOOR & src_cmap - cover:                       # cannot happen; guards a future edit of want
             sys.exit(f"error: {face} would ship without part of Latin-1")
