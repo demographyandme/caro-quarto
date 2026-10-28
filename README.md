@@ -118,8 +118,12 @@ A release:
    report (`lost 0`), copy the woff2 files and `fonts.css` into `fonts/`, then
    prove the commit reproduces: `--check-rebuild` (with a scratch `--out`)
    builds twice and compares the build with `fonts/` byte for byte, as CI does.
-3. Commit, then tag the commit `v<version>` (for example `v1.3.5`) and push the
-   tag, so a version names exact content.
+3. Commit and merge. The tag is automatic: when CI passes on `main`,
+   `.github/workflows/release-tag.yml` runs `scripts/release-tag.sh --push`,
+   which tags `v<version>` on the commit that set the version (the oldest one
+   whose theme and fonts equal `main`'s), so a version names exact content.
+   Tags never move: CI fails a change to the theme or fonts that keeps a
+   version already tagged (bump the version instead).
 4. Vendor into every consumer: `scripts/vendoring.sh` copies the extension tree
    and `fonts/` together. Commit in each site; nothing reaches a site until it
    is vendored and committed there.
