@@ -4,6 +4,46 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.5.0
+
+- **The skip link is the first Tab stop and moves focus.** Quarto puts
+  `include-before-body` content inside `<main>`, after the navbar and TOC, so
+  the link was Tab stop 7-12 at 1280 px and bypassed nothing; `quarto-nav.js`
+  also rewrote its href, so Enter left focus on the link. The new post-render
+  normalizer `caro-post-render.sh` moves it to the first child of `<body>` and
+  gives `<main>` `tabindex="-1"`; `skip-link.html` moves focus on activation.
+  Measured: Tab stop 1 on every page tested, focus in `<main>`, no page load.
+- **Post-render normalizer.** `caro-post-render.sh <_site>` (bash + perl,
+  idempotent) also: puts `fonts.css` first in `<head>` with preloads for
+  Literata, Newsreader and Fira Sans core (CLS under a throttled network below
+  0.05 on every page measured, from up to 0.27); defers Quarto's five classic
+  head scripts; drops tippy, popper and the syntax CSS from pages with no
+  consumer; strips Quarto's invalid `append-hash` and redundant `role="link"`
+  (Nu checker: 52 messages to 0); carries the navbar `role="menu"` /
+  `aria-label` fix the fleet already applied.
+- **Links inside a site stay in the tab.** `external-links.html` decided on the
+  raw href, which `quarto-nav.js` had already made absolute: on every companion
+  the skip link, in-page anchors (276 on the Brazil companion) and the site's
+  own files opened a new tab. It now decides on the resolved URL against the
+  site root. Links it opens in a new tab announce "(opens in a new tab)" to
+  assistive technology, with no visible change.
+- **The reader's font-size setting applies.** `$fs-root` is `100%` (was
+  `16px`): identical at the default, scales with the browser setting.
+- **Real Newsreader italic.** Three `Newsreader-Italic-*` files replace the
+  browser's slanted roman in the home page definition.
+- **Fonts rebuild byte for byte.** `build-fonts.py` read the coverage floor
+  from file names the 1.4.0 split had retired, so a rebuild without a census
+  shipped Literata with no basic Latin. The floor is now the shipped
+  `core/latn/sym` files plus Latin-1, `--check-rebuild` compares with `fonts/`,
+  and CI rebuilds from the sources with the pinned fontTools
+  (`scripts/requirements-fonts.txt`).
+- **Print** leaves out the viewer iframe, which cannot split across pages,
+  instead of printing a cut figure.
+- `color.adjust` replaces the deprecated `darken()` (compiled CSS identical).
+- **Vendoring checks its source.** `scripts/vendoring.sh` copies only from a
+  CARO checkout, refuses a source and site that contain one another, and
+  replaces a site's theme only after the new copy succeeded.
+
 ## 1.4.3
 
 - **An embedded viewer's frame fits its content exactly.** `viewer-autoresize.html`
