@@ -1,3 +1,5 @@
+@use "sass:color";
+
 /* ── CARO design tokens ─────────────────────────────────────────── */
 /* Archival cream, crimson accent. Typography self-hosted (fonts/fonts.css,
    OFL — Google Fonts catalog families served from upstream builds so the
@@ -27,7 +29,7 @@ $font-family-monospace: "Spline Sans Mono", "Fira Sans", "SFMono-Regular", Conso
 $body-bg: #F9F8F6;
 $body-color: #242424;   // slightly darker ink for body text
 $link-color: #8c1d40;
-$link-hover-color: darken($link-color, 12%);
+$link-hover-color: color.adjust($link-color, $lightness: -12%);   // same colour as darken($link-color, 12%), which Dart Sass 3 removes
 
 $primary: #8c1d40;
 $secondary: #525252;          // AAA (7.4:1 on cream): secondary/quiet text + faint underlines
