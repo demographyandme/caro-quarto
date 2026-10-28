@@ -21,8 +21,9 @@
 #   7. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
-#      the theme's compiled rules and the served fonts; where Node has Playwright,
-#      tests/external-links-check.js then checks in Chromium which links open a new tab.
+#      the theme's compiled rules and the served fonts; tests/external-links-check.js
+#      then checks in Chromium which links open a new tab (CI fails without
+#      Playwright, tests/package.json; a local run without it skips).
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -165,7 +166,11 @@ if (cd "$site" && quarto render --quiet); then
   if command -v node > /dev/null; then rc=0; node tests/external-links-check.js "$out" --assert || rc=$?; fi
   case $rc in
     0) ;;
-    77) echo "::notice::external-links browser check skipped (no Node, Playwright or Chromium)" ;;
+    77) if [[ "${GITHUB_ACTIONS:-}" == true ]]; then
+          err "external-links browser check could not run (no Node, Playwright or Chromium; CI installs them from tests/package.json)"
+        else
+          echo "::notice::external-links browser check skipped (no Node, Playwright or Chromium)"
+        fi ;;
     *) err "external-links browser check failed (tests/external-links-check.js)" ;;
   esac
 else
