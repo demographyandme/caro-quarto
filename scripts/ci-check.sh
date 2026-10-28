@@ -7,7 +7,9 @@
 #   2. release bookkeeping: _extension.yml's version is the newest CHANGELOG entry;
 #   3. fonts: every url() in fonts/fonts.css names a committed file and every
 #      committed woff2 is declared there (a renamed or dropped face fails);
-#   4. the theme renders: scripts/vendoring.sh copies the extension and fonts into
+#   4. the tokens compile, with Quarto's bundled Sass, without deprecated colour
+#      or global functions (Quarto's render hides Sass warnings);
+#   5. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
 #      the theme's compiled rules and the served fonts.
@@ -41,6 +43,25 @@ done <<< "$declared"
 for f in fonts/*.woff2; do
   grep -qxF "${f#fonts/}" <<< "$declared" || err "$f is not declared in fonts/fonts.css"
 done
+
+echo "== sass deprecations"
+# Quarto's render hides Sass warnings, so compile the tokens with the Sass that
+# Quarto bundles and make the deprecated colour/global functions fatal: a future
+# Dart Sass 3 removes them. (@import itself is Quarto's layering, so not fatal here.)
+sass_bin=$(find "$(dirname "$(readlink -f "$(command -v quarto)")")/tools" -path '*dart-sass/sass' -type f 2>/dev/null | head -n 1)
+if [[ -z "$sass_bin" ]]; then
+  err "Quarto's bundled dart-sass not found next to $(command -v quarto)"
+else
+  sass_dir=$(mktemp -d)
+  cat > "$sass_dir/stub.scss" <<'SCSS'
+@import "caro-tokens";
+a { color: $link-hover-color; }
+SCSS
+  "$sass_bin" --no-source-map --load-path=_extensions/caro-quarto \
+    --silence-deprecation=import --fatal-deprecation=color-functions,global-builtin "$sass_dir/stub.scss" > /dev/null \
+    || err "_caro-tokens.scss uses a deprecated Sass colour or global function (see above)"
+  rm -rf "$sass_dir"
+fi
 
 echo "== render fixture ($(quarto --version))"
 site=$(mktemp -d)
