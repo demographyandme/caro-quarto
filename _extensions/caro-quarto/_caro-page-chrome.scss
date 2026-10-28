@@ -282,6 +282,13 @@ a:focus-visible,
     display: none !important;
   }
 
+  /* An embedded viewer iframe keeps its screen height (set by viewer-autoresize)
+     and is not split across pages, so it prints as a cut-off fragment of the
+     figure. Leave it out of print; the interactive lives on the page URL. */
+  .visual-companion-viewer {
+    display: none !important;
+  }
+
   body {
     background: #fff;
   }
