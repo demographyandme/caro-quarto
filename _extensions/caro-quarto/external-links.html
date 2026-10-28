@@ -11,12 +11,30 @@
     );
   }
 
-  function hostOf(href) {
+  /* Root URL of the current Quarto site. quarto:offset is only emitted when
+     search is on (every fleet site sets search: false), so fall back to the
+     site_libs/ script every website page loads from the site root (404.html
+     gets it as an absolute site path). null when neither is found. */
+  function siteRoot() {
     try {
-      return new URL(href, document.baseURI).hostname.replace(/^www\./i, "").toLowerCase();
-    } catch (e) {
-      return null;
-    }
+      var meta = document.querySelector('meta[name="quarto:offset"]');
+      if (meta) return new URL(meta.getAttribute("content"), location.href);
+      var s = document.querySelector('script[src*="site_libs/quarto-nav/"]');
+      if (s) return new URL(s.src.slice(0, s.src.indexOf("site_libs/")));
+    } catch (e) {}
+    return null;
+  }
+
+  /* Decided on the resolved URL (a.href), not the attribute text: quarto-nav.js
+     rewrites every href to an absolute URL before this runs, so "#x" arrives as
+     "https://demographyandme.github.io/<slug>/#x". Inside = same origin and a path
+     under the site root. A link to another companion (same origin, different
+     /<slug>/ path) is not inside and keeps opening in a new tab, as before. */
+  function insideSite(u, root) {
+    if (u.origin !== location.origin) return false;
+    if (u.pathname === location.pathname) return true;
+    if (!root) return false;
+    return u.pathname.indexOf(root.pathname) === 0 || u.pathname + "/" === root.pathname;
   }
 
   function markNewTab(a) {
@@ -25,8 +43,9 @@
   }
 
   function applyExternalLinks() {
+    var root = siteRoot();
     document.querySelectorAll("a[href]").forEach(function (a) {
-      if (shouldSkip(a)) return;
+      if (shouldSkip(a) || a.classList.contains("skip-link")) return;
       var href = a.getAttribute("href");
       if (!href || href.charAt(0) === "#") return;
 
@@ -35,8 +54,13 @@
         return;
       }
 
-      var host = hostOf(href);
-      if (!host || INTERNAL.test(host)) return;
+      var u;
+      try {
+        u = new URL(a.href, document.baseURI);
+      } catch (e) {
+        return;
+      }
+      if (!u.hostname || INTERNAL.test(u.hostname) || insideSite(u, root)) return;
       markNewTab(a);
     });
   }

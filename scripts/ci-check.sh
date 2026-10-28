@@ -12,7 +12,8 @@
 #   5. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
-#      the theme's compiled rules and the served fonts.
+#      the theme's compiled rules and the served fonts; where Node has Playwright,
+#      tests/external-links-check.js then checks in Chromium which links open a new tab.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
@@ -79,6 +80,8 @@ if (cd "$site" && quarto render --quiet); then
   must() { grep -q -- "$2" "$out/$1" || err "$1: $3"; }
   must index.html 'class="skip-link"'               "skip-link.html include missing"
   must index.html 'demographyandme\\.com'           "external-links.html include missing"
+  must index.html 'site_libs/quarto-nav/'           "external-links.html: site-root lookup (site_libs/quarto-nav/) missing"
+  must links.html 'class="skip-link"'               "links.html (link cases) not rendered"
   must index.html 'caro-viewer-height'              "viewer-autoresize.html include missing"
   must index.html 'href="fonts/fonts.css"'          "fonts/fonts.css not linked"
   must viewer.html 'class="[^"]*research-companion' "body-classes: research-companion not applied"
@@ -97,6 +100,14 @@ if (cd "$site" && quarto render --quiet); then
   while IFS= read -r f; do
     [[ -z "$f" || -f "$out/fonts/$f" ]] || err "rendered site does not serve fonts/$f"
   done <<< "$declared"
+  # Browser check: links served under a sub-path, as a companion is (exit 77: no Playwright here).
+  rc=77
+  if command -v node > /dev/null; then rc=0; node tests/external-links-check.js "$out" --assert || rc=$?; fi
+  case $rc in
+    0) ;;
+    77) echo "::notice::external-links browser check skipped (no Node, Playwright or Chromium)" ;;
+    *) err "external-links browser check failed (tests/external-links-check.js)" ;;
+  esac
 else
   err "quarto render of tests/fixture failed"
 fi
