@@ -1,0 +1,50 @@
+# Tag each CARO release (v<version>) once its checks pass on main.
+#
+# A site vendors the theme and fonts of a release and the fleet's tests hold it to
+# the tag its _extension.yml names, so every version must be tagged on the commit
+# whose content it names. scripts/release-tag.sh finds that commit (the one that
+# set the version, or the oldest after it with main's theme and fonts), creates
+# the tag and pushes it; an existing tag is never moved. Runs after "CI" succeeds
+# on a push to main; a manual run (Actions tab) tags main's head the same way.
+
+name: Release tag
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-tag
+  cancel-in-progress: false
+
+jobs:
+  tag:
+    if: >-
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       github.event.workflow_run.event == 'push' &&
+       github.event.workflow_run.head_branch == github.event.repository.default_branch &&
+       github.event.workflow_run.head_repository.full_name == github.repository) ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.ref == format('refs/heads/{0}', github.event.repository.default_branch))
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Tag the release this commit carries
+        env:
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SHA" "origin/${DEFAULT_BRANCH}" \
+            || { echo "::error::${SHA} is not on ${DEFAULT_BRANCH}; refusing to tag it"; exit 1; }
+          bash scripts/release-tag.sh --push "$SHA"
