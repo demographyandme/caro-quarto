@@ -5,6 +5,7 @@ project:
   type: website
   resources:
     - fonts/
+    - data/
 
 website:
   title: "CARO fixture"

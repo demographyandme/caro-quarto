@@ -1,0 +1,28 @@
+---
+title: "Links"
+---
+
+Link cases for external-links.html; tests/external-links-check.js serves the
+rendered site under a sub-path and checks which ones open a new tab.
+
+- [In-page anchor](#a-section)
+- [Same-site page](viewer.qmd)
+- [Same-site file](data/sample.csv)
+- [External DOI](https://doi.org/10.4054/DemRes.2023.48.28)
+- [Main site](https://www.demographyandme.com/research/)
+- [Already cued (opens in a new tab)](https://example.org/cued)
+
+```{=html}
+<p><a href="../other-companion/">Another companion</a> ·
+<a class="project-card-link" href="https://example.org/card">Project card</a> ·
+<a href="https://example.org/labelled" aria-label="Labelled link">Labelled</a></p>
+```
+
+```{.r code-line-numbers="true"}
+x <- 1
+y <- 2
+```
+
+## A section
+
+End.
