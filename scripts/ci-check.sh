@@ -7,22 +7,29 @@
 #   2. release bookkeeping: _extension.yml's version is the newest CHANGELOG entry;
 #   3. fonts: every url() in fonts/fonts.css names a committed file and every
 #      committed woff2 is declared there (a renamed or dropped face fails);
-#   4. the tokens compile, with Quarto's bundled Sass, without deprecated colour
+#   4. the fonts are reproducible: scripts/build-fonts.py rebuilds them from the
+#      upstream sources in git (FONT_SOURCES) and the build must equal fonts/
+#      byte for byte. Needs the fontTools pinned in scripts/requirements-fonts.txt
+#      (in $CARO_FONTS_PYTHON, default python3); CI fails without it, a local
+#      run warns and skips;
+#   5. the tokens compile, with Quarto's bundled Sass, without deprecated colour
 #      or global functions (Quarto's render hides Sass warnings);
-#   5. the theme renders: scripts/vendoring.sh copies the extension and fonts into
+#   6. tests/post-render: the HTML normalizer (caro-post-render.sh) matches its
+#      fixtures and is idempotent; on the rendered fixture it puts the skip link
+#      first in <body>.
+#   7. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
 #      the theme's compiled rules and the served fonts; where Node has Playwright,
 #      tests/external-links-check.js then checks in Chromium which links open a new tab.
-#   6. tests/post-render: the HTML normalizer (caro-post-render.sh) matches its
-#      fixtures and is idempotent; on the rendered fixture it puts the skip link
-#      first in <body>.
 set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 repo=$PWD
 fail=0
 err() { echo "::error::$*"; fail=1; }
+scratch=$(mktemp -d)
+trap 'rm -rf "$scratch"' EXIT
 
 echo "== shellcheck, py_compile"
 # Each problem becomes an annotation, so a failure is readable without the raw log.
@@ -48,6 +55,29 @@ for f in fonts/*.woff2; do
   grep -qxF "${f#fonts/}" <<< "$declared" || err "$f is not declared in fonts/fonts.css"
 done
 
+echo "== font rebuild"
+FONT_SOURCES=e725422   # the commit holding the upstream .ttf/.otf (build-fonts.py docstring)
+py=${CARO_FONTS_PYTHON:-python3}
+pin=$(sed -n 's/^fonttools==//p' scripts/requirements-fonts.txt)
+have=$("$py" -c 'import fontTools; print(fontTools.version)' 2>/dev/null || true)
+if [[ -n "$pin" && "$have" == "$pin" ]]; then
+  if ! git cat-file -e "$FONT_SOURCES^{commit}" 2>/dev/null; then
+    err "commit $FONT_SOURCES (font sources) is not in this clone; fetch the full history"
+  elif "$py" scripts/build-fonts.py --from-git "$FONT_SOURCES" --out "$scratch/fonts" --check-rebuild \
+         > "$scratch/fonts.log" 2>&1; then
+    tail -n 2 "$scratch/fonts.log"
+  else
+    grep -v '^fsSelection bits' "$scratch/fonts.log"
+    err "scripts/build-fonts.py does not reproduce fonts/ (fontTools $have)"
+  fi
+elif [[ "${GITHUB_ACTIONS:-}" == true ]]; then
+  err "$py has fontTools '${have:-none}'; the font rebuild check needs $pin (scripts/requirements-fonts.txt)"
+else
+  echo "::warning::font rebuild skipped: $py has fontTools '${have:-none}', the check needs $pin" \
+       "(python3 -m venv DIR && DIR/bin/pip install -r scripts/requirements-fonts.txt; CARO_FONTS_PYTHON=DIR/bin/python)"
+fi
+
+
 echo "== sass deprecations"
 # Quarto's render hides Sass warnings, so compile the tokens with the Sass that
 # Quarto bundles and make the deprecated colour/global functions fatal: a future
@@ -71,8 +101,8 @@ echo "== post-render normalizer (tests/post-render)"
 bash tests/post-render/run.sh || err "tests/post-render: the normalizer output differs from the fixtures"
 
 echo "== render fixture ($(quarto --version))"
-site=$(mktemp -d)
-trap 'rm -rf "$site"' EXIT
+site="$scratch/site"
+mkdir "$site"
 cp -R tests/fixture/. "$site/"
 (
   # shellcheck source=scripts/caro-vendoring-run.sh

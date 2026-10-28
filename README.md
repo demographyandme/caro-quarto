@@ -105,8 +105,19 @@ A release:
 
 1. Change the theme; bump `version:` in `_extensions/caro-quarto/_extension.yml`
    and add a `CHANGELOG.md` entry.
-2. If the fonts change, rebuild them from the upstream sources with
-   `python3 scripts/build-fonts.py` (deterministic; `--check-rebuild` proves it).
+2. If the fonts change, rebuild them from the upstream sources with the pinned
+   fontTools (another version writes different bytes):
+
+   ```bash
+   python3 -m venv /tmp/fonts-venv && /tmp/fonts-venv/bin/pip install -r scripts/requirements-fonts.txt
+   /tmp/fonts-venv/bin/python scripts/build-fonts.py --from-git e725422 --out /tmp/caro-fonts
+   ```
+
+   Coverage never shrinks: each face keeps every code point the committed
+   `fonts/` has, plus Latin-1, plus what `--census` lists. Check the printed
+   report (`lost 0`), copy the woff2 files and `fonts.css` into `fonts/`, then
+   prove the commit reproduces: `--check-rebuild` (with a scratch `--out`)
+   builds twice and compares the build with `fonts/` byte for byte, as CI does.
 3. Commit, then tag the commit `v<version>` (for example `v1.3.5`) and push the
    tag, so a version names exact content.
 4. Vendor into every consumer: `scripts/vendoring.sh` copies the extension tree
