@@ -4,6 +4,18 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.7.0
+
+- **The gate also fails a page that loads from another site.** The reflow gate
+  (`reflow/caro-reflow-check.mjs`) records every request a page makes while it
+  loads, iframes included, and reads what its frames reference (images, scripts,
+  stylesheets, preloads), so a lazy image that never loaded is caught too. Any
+  host other than the served site fails the page unless named with
+  `--allow-host <host>` (exact host, repeatable). Still one browser pass; the
+  reflow check, its output and its exit codes are unchanged. The fleet allows
+  only its analytics host, plus a documented temporary exception on the main
+  site.
+
 ## 1.6.0
 
 - **No page scrolls sideways on a phone.** A long URL used as link text (the
