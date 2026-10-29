@@ -4,6 +4,22 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.6.0
+
+- **No page scrolls sideways on a phone.** A long URL used as link text (the
+  references and citation blocks) is one unbreakable word, and it set the page
+  width on six companions: up to 602 px wide at a 320 px viewport (Brazil), and
+  wpp at 1358 px even at 1280. Links in the reading column now take
+  `overflow-wrap: break-word`, which breaks a word only where it would overflow
+  its line. All 32 pages of the 9 sites fit at 320, 375 and 1280 px (10
+  page-widths overflowed); screenshots at 768-1440 px are unchanged except where
+  a link overflowed.
+- **The theme ships its reflow gate.** `reflow/caro-reflow-check.mjs` (Playwright
+  pinned in `reflow/package.json`) serves a rendered `_site`, under `/<slug>/`
+  with `--slug`, and fails when any page is wider than the viewport at 320, 375
+  or 1280 px, naming the element. The main site's build and the shared companion
+  publish workflow run the vendored copy after the render, before the upload.
+
 ## 1.5.0
 
 - **The skip link is the first Tab stop and moves focus.** Quarto puts
