@@ -56,16 +56,21 @@ cannot, for example the skip link, which Quarto places inside `<main>`:
 bash _extensions/caro-quarto/caro-post-render.sh _site
 ```
 
-The theme also ships its reflow gate, which the fleet's CI runs on every built
-site: no page may be wider than the viewport at 320 (WCAG 2.2 SC 1.4.10), 375 or
-1280 CSS px. Copy the folder out of the site first, so `node_modules` never lands
+The theme also ships its page gate, which the fleet's CI runs on every built
+site. In one Chromium pass it checks that no page is wider than the viewport at
+320 (WCAG 2.2 SC 1.4.10), 375 or 1280 CSS px, and that no page loads anything
+from a host other than the site itself (iframes included, and lazy images not yet
+requested) unless `--allow-host` names that host, such as the documented
+analytics. Each offending request is named with its page, width and URL; the
+audit reads Chromium's request log, so it works even where those hosts are
+unreachable. Copy the folder out of the site first, so `node_modules` never lands
 in the theme (`--slug` serves the site at `/<slug>/`, as GitHub Pages serves a
 companion):
 
 ```sh
 cp -R _extensions/caro-quarto/reflow "$TMP/reflow" && cd "$TMP/reflow"
 npm ci --ignore-scripts && npx --no-install playwright install --with-deps chromium
-node caro-reflow-check.mjs /path/to/_site --slug my-companion 320 375 1280
+node caro-reflow-check.mjs /path/to/_site --slug my-companion --allow-host cloud.umami.is 320 375 1280
 ```
 
 ## Typography
@@ -105,7 +110,8 @@ on any literal size **and** on any reading-content role assigned a heading tier.
 Header includes: `fonts.html` (empty compat stub), `external-links.html`,
 `skip-link.html`, `viewer-autoresize.html`.
 Run after the render: `caro-post-render.sh` (the HTML normalizer) and
-`reflow/caro-reflow-check.mjs` (the reflow gate, Playwright pinned beside it).
+`reflow/caro-reflow-check.mjs` (the reflow and third-party request gate,
+Playwright pinned beside it).
 
 ## Maintaining
 
