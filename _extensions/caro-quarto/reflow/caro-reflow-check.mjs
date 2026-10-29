@@ -1,23 +1,35 @@
-// caro-reflow-check.mjs — CARO's reflow gate (audit K-04/G-01, E2-09, W3-13): every
-// page of a built site must be no wider than the viewport. A page whose
-// document.documentElement.scrollWidth is above window.innerWidth scrolls sideways,
-// or a phone zooms the whole page out (WCAG 2.2 SC 1.4.10 Reflow, whose reference
-// width is 320 CSS px).
+// caro-reflow-check.mjs — CARO's page gate, run by the fleet's CI on every built
+// site. One Chromium pass over every page at each width checks two things:
+//
+// 1. Reflow (audit K-04/G-01, E2-09, W3-13): every page must be no wider than the
+//    viewport. A page whose document.documentElement.scrollWidth is above
+//    window.innerWidth scrolls sideways, or a phone zooms the whole page out (WCAG
+//    2.2 SC 1.4.10 Reflow, whose reference width is 320 CSS px). A page that
+//    overflows is named with its width and the widest element that sticks out past
+//    the viewport.
+// 2. Requests (WS6): no page may load anything from a host other than the served
+//    site, except a host named with --allow-host (repeatable; exact host name, e.g.
+//    the documented analytics). Every request the page makes while it is open is
+//    recorded, its iframes' included (a viewer's own scripts count), from the
+//    navigation until the next page is opened; so is every resource the page's
+//    frames reference (img, script, iframe, source, link rel=stylesheet/preload/
+//    icon/preconnect, ...) that a lazy load had not yet requested. A request to a
+//    host the network cannot reach is still recorded, so the audit also works
+//    offline. Each one outside the site is named with its page, width and URL.
 //
 // Vendored with the theme, like caro-post-render.sh, so every fleet site (the main
 // site and each companion, whose CI cannot reach the private main site) runs the
 // same gate. It serves the site itself, at / or, with --slug, at /<slug>/ (as GitHub
-// Pages serves a companion), and loads every .html file outside site_libs/ in
-// Chromium at each width. A page that overflows is named with its width and the
-// widest element that sticks out past the viewport.
-// Exit 0: no page overflows; 1: at least one does (each is listed); 2: usage or
-// setup error (including Playwright or its Chromium missing).
+// Pages serves a companion), and loads every .html file outside site_libs/.
+// Exit 0: no page overflows or loads from a host it may not; 1: at least one does
+// (each is listed); 2: usage or setup error (including Playwright or its Chromium
+// missing).
 //
-// Usage: node caro-reflow-check.mjs <site-dir> [--slug name] [width ...]
-//        (default widths 320 375 1280). Playwright is pinned in package.json beside
-//        this file: copy this folder out of the site (so node_modules never lands
-//        in the theme), `npm ci --ignore-scripts` there, then
-//        `npx --no-install playwright install --with-deps chromium`.
+// Usage: node caro-reflow-check.mjs <site-dir> [--slug name] [--allow-host host ...]
+//        [width ...] (default widths 320 375 1280). Playwright is pinned in
+//        package.json beside this file: copy this folder out of the site (so
+//        node_modules never lands in the theme), `npm ci --ignore-scripts` there,
+//        then `npx --no-install playwright install --with-deps chromium`.
 
 import { readdirSync, statSync, existsSync, createReadStream } from "node:fs";
 import http from "node:http";
@@ -36,10 +48,16 @@ if (slugAt >= 0) {
   if (!slug || /[^A-Za-z0-9._-]/.test(slug)) die(`bad --slug: ${args[slugAt + 1] || "(none)"}`);
   args.splice(slugAt, 2);
 }
+const allowed = new Set();
+for (let at; (at = args.indexOf("--allow-host")) >= 0; args.splice(at, 2)) {
+  const host = (args[at + 1] || "").toLowerCase();
+  if (!/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$/.test(host)) die(`bad --allow-host: ${args[at + 1] || "(none)"}`);
+  allowed.add(host);
+}
 const [siteArg, ...widthArgs] = args;
 const WIDTHS = widthArgs.length ? widthArgs.map(Number) : [320, 375, 1280];
 
-if (!siteArg) die("usage: caro-reflow-check.mjs <site-dir> [--slug name] [width ...]");
+if (!siteArg) die("usage: caro-reflow-check.mjs <site-dir> [--slug name] [--allow-host host ...] [width ...]");
 if (WIDTHS.some((w) => !Number.isInteger(w) || w <= 0)) die(`bad width in: ${widthArgs.join(" ")}`);
 const site = path.resolve(siteArg);
 if (!existsSync(site) || !statSync(site).isDirectory()) die(`no such site folder: ${site}`);
@@ -87,16 +105,64 @@ const server = http.createServer((req, res) => {
   createReadStream(file).pipe(res);
 });
 
+// The resources a frame references, requested or not yet (a lazy image below the
+// fold): run in every frame of the page after it is measured.
+const REFERENCED = () => {
+  const out = [];
+  const add = (v) => { if (v) try { out.push(new URL(v.trim(), document.baseURI).href); } catch { /* not a URL */ } };
+  const srcset = (v) => (v || "").split(",").forEach((c) => add(c.trim().split(/\s+/)[0]));
+  for (const el of document.querySelectorAll("img, source, input[type=image]")) { add(el.getAttribute("src")); srcset(el.getAttribute("srcset")); }
+  for (const el of document.querySelectorAll("script[src], iframe[src], frame[src], embed[src], audio[src], video[src], track[src]")) add(el.getAttribute("src"));
+  for (const el of document.querySelectorAll("video[poster]")) add(el.getAttribute("poster"));
+  for (const el of document.querySelectorAll("object[data]")) add(el.getAttribute("data"));
+  const LOADS = /(^|\s)(stylesheet|icon|apple-touch-icon|mask-icon|manifest|preload|modulepreload|prefetch|preconnect|dns-prefetch)(\s|$)/i;
+  for (const el of document.querySelectorAll("link[href]")) if (LOADS.test(el.getAttribute("rel") || "")) add(el.getAttribute("href"));
+  return out;
+};
+
 let browser, setupError;
 const wide = [];
+const outside = [];          // { rel, width, url, how } requests the site may not make
+const allowedSeen = new Map(); // allowed host -> number of requests
 try {
   await new Promise((ok, no) => server.once("error", no).listen(0, "127.0.0.1", ok));
-  const base = `http://127.0.0.1:${server.address().port}${prefix}`;
+  const siteHost = `127.0.0.1:${server.address().port}`;
+  const base = `http://${siteHost}${prefix}`;
+  // A URL's host when it is fetched from outside the served site, else null.
+  const foreign = (u) => {
+    let url;
+    try { url = new URL(u); } catch { return null; }
+    if (!/^(https?|wss?):$/.test(url.protocol) || url.host === siteHost) return null;
+    return url.hostname.toLowerCase();
+  };
   browser = await chromium.launch();
   for (const width of WIDTHS) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: "reduce" });
+    // Context-wide, so every frame's requests (an iframe's included) are seen.
+    let requested = [];
+    context.on("request", (r) => requested.push(r.url()));
     const page = await context.newPage();
+    const audit = async (rel) => {
+      let referenced = [];
+      for (const frame of page.frames()) {
+        try { referenced = referenced.concat(await frame.evaluate(REFERENCED)); } catch { /* a frame that failed or went away */ }
+      }
+      const seen = new Set();
+      for (const [urls, how] of [[requested, "requested"], [referenced, "referenced, not yet requested"]]) {
+        for (const url of urls) {
+          const host = foreign(url);
+          if (!host || seen.has(url)) continue;
+          seen.add(url);
+          if (allowed.has(host)) allowedSeen.set(host, (allowedSeen.get(host) || 0) + 1);
+          else outside.push({ rel, width, url, host, how });
+        }
+      }
+      requested = [];
+    };
+    let previous = null;
     for (const rel of list) {
+      if (previous !== null) await audit(previous);
+      previous = rel;
       await page.goto(`${base}/${rel}`, { waitUntil: "load", timeout: 60000 });
       const m = await page.evaluate(async () => {
         await document.fonts.ready;
@@ -133,6 +199,7 @@ try {
       if (!ok) wide.push({ rel, width, ...m });
       console.log(`${ok ? "ok  " : "WIDE"} ${String(width).padStart(4)}px  scrollWidth ${String(m.scrollW).padStart(4)}  ${rel}`);
     }
+    if (previous !== null) await audit(previous);
     await context.close();
   }
 } catch (e) {
@@ -143,9 +210,19 @@ try {
 }
 if (setupError) die(setupError.message);
 
+const allowedNote = allowed.size
+  ? ` but the allowed ${[...allowed].sort().map((h) => `${h} (${allowedSeen.get(h) || 0} request(s))`).join(", ")}`
+  : "";
 if (wide.length) {
   console.error(`caro-reflow-check: ${wide.length} page/width pair(s) wider than the viewport:`);
   for (const w of wide) console.error(`  ${w.rel}: ${w.scrollW}px at ${w.width}px (widest: ${w.culprit || "none found"})`);
-  process.exit(1);
 }
-console.log(`caro-reflow-check: ok (${list.length} page(s) x ${WIDTHS.length} width(s): ${WIDTHS.join(", ")} px${slug ? `, served at /${slug}/` : ""})`);
+if (outside.length) {
+  const hosts = [...new Set(outside.map((o) => o.host))].sort();
+  console.error(`caro-reflow-check: ${outside.length} request(s) to a host other than the site (${hosts.join(", ")}; --allow-host names one the site may use):`);
+  for (const o of outside) console.error(`  ${o.rel} at ${o.width}px: ${o.url} (${o.how})`);
+  if (allowed.size) console.error(`caro-reflow-check: not counted:${allowedNote.replace(/^ but/, "")}`);
+}
+if (wide.length || outside.length) process.exit(1);
+console.log(`caro-reflow-check: ok (${list.length} page(s) x ${WIDTHS.length} width(s): ${WIDTHS.join(", ")} px${slug ? `, served at /${slug}/` : ""}); ` +
+  `requests outside the site: none${allowedNote}`);

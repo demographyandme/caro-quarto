@@ -32,7 +32,9 @@
 #  10. the reflow gate (_extensions/caro-quarto/reflow/caro-reflow-check.mjs, which
 #      the fleet's CI runs on every built site): tests/reflow installs it as a
 #      caller does and checks it on fixture pages (a 332 px page fails at 320 px
-#      and is named), then on the rendered fixture at 320, 375 and 1280 px; Quarto
+#      and is named; a page loading an image, or an iframe loading a script, from
+#      a host other than the site fails unless --allow-host names it), then on the
+#      rendered fixture at 320, 375 and 1280 px; Quarto
 #      must not copy it into _site. CI fails without Node, the npm install or
 #      Chromium; a local run without them skips.
 set -euo pipefail
