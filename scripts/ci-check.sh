@@ -70,7 +70,7 @@ for f in fonts/*.woff2; do
   grep -qxF "${f#fonts/}" <<< "$declared" || err "$f is not declared in fonts/fonts.css"
 done
 # Every style a fallback stands in for has a web face: otherwise the browser
-# synthesizes it from another style once the web font loads (AB-12).
+# synthesizes it from another style once the web font loads.
 python3 - fonts/fonts.css <<'PY' || err "fonts/fonts.css: a fallback's family/style has no web face"
 import re, sys
 faces = {(m[0], m[1]) for m in re.findall(r'font-family: "([^"]+)";[^}]*?font-style: (\w+);', open(sys.argv[1]).read())}
@@ -179,7 +179,7 @@ if (cd "$site" && quarto render --quiet); then
     grep -q '@media print{[^@]*\.visual-companion-viewer{display:none' "$out/$css" \
       || err "print rule hiding .visual-companion-viewer missing from compiled css"
     grep -q '\.visually-hidden' "$out/$css" || err ".visually-hidden (external-links.html cue) missing from compiled css"
-    # Reflow (W3-13, SC 1.4.10): a long URL as link text breaks instead of widening the page.
+    # Reflow (SC 1.4.10): a long URL as link text breaks instead of widening the page.
     grep -q '#quarto-document-content a{overflow-wrap:break-word}' "$out/$css" \
       || err "#quarto-document-content a overflow-wrap:break-word (long links) missing from compiled css"
   fi

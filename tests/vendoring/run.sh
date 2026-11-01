@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # scripts/vendoring.sh: copies the theme and fonts into a site only from a real
 # CARO source, never into or out of itself, and a failed copy leaves the site's
-# previous theme in place (audit AB-11). Run from the repository root.
+# previous theme in place. Run from the repository root.
 set -euo pipefail
 
 repo=$PWD
