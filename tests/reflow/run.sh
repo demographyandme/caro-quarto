@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # _extensions/caro-quarto/reflow/caro-reflow-check.mjs, the reflow and request gate
-# every fleet site runs on its _site (audit K-04/G-01, W3-13, WS6). Installed the
+# every fleet site runs on its _site. Installed the
 # way the callers install it (the folder copied out of the theme, `npm ci` there),
 # then:
 #   - a page 332 px wide at 320 px fails (exit 1), named with its widths and its
@@ -8,7 +8,7 @@
 #   - served under a sub-path (--slug, as a companion is), a page whose width comes
 #     from a root-relative /<slug>/ stylesheet is measured with that stylesheet;
 #   - a site whose pages fit passes (exit 0); a bad call exits 2;
-#   - request audit (WS6): a page whose <img> comes from a host other than the
+#   - request audit: a page whose <img> comes from a host other than the
 #     site fails (exit 1), named with its page, width and URL; so does a page whose
 #     iframe (a viewer) loads a third-party script, and a lazy image the load had
 #     not yet requested; with --allow-host for those hosts the site passes, and an
