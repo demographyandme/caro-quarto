@@ -3,8 +3,12 @@
   "use strict";
 
   var INTERNAL = /^(www\.)?demographyandme\.com$/i;
-  var CUE = "(opens in a new tab)";
-  var HAS_CUE = /new (tab|window)/i;
+  /* In the page's language (<html lang>), English otherwise: a cue in another
+     language is read with the page's pronunciation (WCAG 3.1.2). HAS_CUE matches
+     a link that already says it opens a new tab, in either language. */
+  var CUES = { en: "(opens in a new tab)", pt: "(abre em nova aba)" };
+  var CUE = CUES[(document.documentElement.lang || "en").slice(0, 2).toLowerCase()] || CUES.en;
+  var HAS_CUE = /new (tab|window)|nova (aba|janela)/i;
 
   function shouldSkip(a) {
     if (a.hasAttribute("data-skip-external")) return true;

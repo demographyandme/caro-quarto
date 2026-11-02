@@ -52,20 +52,24 @@
     }
   }
 
+  // One observer for every viewer; each entry names its own iframe, so a page
+  // with several viewers pauses each one that leaves the screen.
+  var visibilityObserver = null;
+
   function observeViewerIframes() {
     if (!("IntersectionObserver" in window)) return;
+    if (!visibilityObserver) {
+      visibilityObserver = new IntersectionObserver(function (entries) {
+        for (var j = 0; j < entries.length; j++) {
+          postVisibility(entries[j].target, entries[j].isIntersecting);
+        }
+      });
+    }
     var iframes = document.querySelectorAll("iframe.visual-companion-viewer");
     for (var i = 0; i < iframes.length; i++) {
-      var iframe = iframes[i];
-      if (iframe.dataset.caroVisibilityObserved) continue;
-      iframe.dataset.caroVisibilityObserved = "1";
-      new IntersectionObserver(function (entries) {
-        for (var j = 0; j < entries.length; j++) {
-          if (entries[j].target === iframe) {
-            postVisibility(iframe, entries[j].isIntersecting);
-          }
-        }
-      }).observe(iframe);
+      if (iframes[i].dataset.caroVisibilityObserved) continue;
+      iframes[i].dataset.caroVisibilityObserved = "1";
+      visibilityObserver.observe(iframes[i]);
     }
   }
 

@@ -137,8 +137,11 @@ section.level2:has(> .project-link-wrap) > :not(h2):not(.project-link-wrap) {
   text-decoration: none;
 }
 
+// height: auto keeps the image's own proportions from its width/height
+// attributes, which reserve its box before it loads.
 .project-card-figure img {
   width: 100%;
+  height: auto;
   max-height: 13rem;
   object-fit: contain;
 }

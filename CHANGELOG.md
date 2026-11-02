@@ -4,6 +4,22 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.8.0
+
+- **The skip link and the new-tab cue speak the page's language.** On a page
+  with `lang: pt-BR` the skip link reads "Pular para o conteúdo principal" and a
+  link that opens a new tab is announced "(abre em nova aba)"; other pages keep
+  the English text. A screen reader no longer reads English words with
+  Portuguese pronunciation (WCAG 3.1.2). `tests/lang-strings-check.js` checks it.
+- **Every viewer on a page pauses when it leaves the screen.** The visibility
+  observer in `viewer-autoresize.html` sent every message to the last viewer on
+  the page, so with two or more, only that one paused. One observer now posts to
+  the iframe each entry names (`tests/viewer-autoresize-check.js`).
+- **Hub card images keep their proportions from their size attributes.**
+  `.project-card-figure img` takes `height: auto`, so a card image with `width`
+  and `height` attributes reserves its box before it loads without being drawn
+  at its pixel height.
+
 ## 1.7.0
 
 - **The gate also fails a page that loads from another site.** The reflow gate

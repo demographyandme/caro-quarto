@@ -26,9 +26,13 @@
 #   9. the theme renders: scripts/vendoring.sh copies the extension and fonts into
 #      a scratch copy of tests/fixture/ (a site wired as the README says, with
 #      every include), quarto renders it, and the output must carry each include,
-#      the theme's compiled rules and the served fonts; tests/external-links-check.js
-#      then checks in Chromium which links open a new tab (CI fails without
-#      Playwright, tests/package.json; a local run without it skips).
+#      the theme's compiled rules and the served fonts; tests/viewer-autoresize-check.js
+#      checks in Node that each viewer's visibility message reaches its own iframe,
+#      and tests/lang-strings-check.js that the skip link and new-tab cue follow
+#      the page language;
+#      tests/external-links-check.js then checks in Chromium which links open a new
+#      tab (CI fails without Playwright, tests/package.json; a local run without it
+#      skips).
 #  10. the reflow gate (_extensions/caro-quarto/reflow/caro-reflow-check.mjs, which
 #      the fleet's CI runs on every built site): tests/reflow installs it as a
 #      caller does and checks it on fixture pages (a 332 px page fails at 320 px
@@ -186,6 +190,13 @@ if (cd "$site" && quarto render --quiet); then
   while IFS= read -r f; do
     [[ -z "$f" || -f "$out/fonts/$f" ]] || err "rendered site does not serve fonts/$f"
   done <<< "$declared"
+  # Viewer visibility messages reach their own iframe (Node only, no browser).
+  if command -v node > /dev/null; then
+    node tests/viewer-autoresize-check.js || err "viewer-autoresize check failed (tests/viewer-autoresize-check.js)"
+    node tests/lang-strings-check.js || err "language strings check failed (tests/lang-strings-check.js)"
+  elif [[ "${GITHUB_ACTIONS:-}" == true ]]; then
+    err "viewer-autoresize check could not run (no Node)"
+  fi
   # Browser check: links served under a sub-path, as a companion is (exit 77: no Playwright here).
   rc=77
   if command -v node > /dev/null; then rc=0; node tests/external-links-check.js "$out" --assert || rc=$?; fi

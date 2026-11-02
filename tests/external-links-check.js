@@ -118,7 +118,7 @@ const SKIP = ".navbar, .quarto-navbar, .nav-footer, footer.page-footer, .dropdow
         if (l.kind === "dme" && l.marked && !l.card) failures.push(`${name}: demographyandme.com link opens a new tab: ${l.href}`);
       }
       for (const n of names) {
-        const hits = (n.name.match(/new (tab|window)/gi) || []).length;
+        const hits = (n.name.match(/new (tab|window)|nova (aba|janela)/gi) || []).length;
         if (hits !== 1) failures.push(`${name}: marked link name has the cue ${hits} times: "${n.name}" <- ${n.href}`);
       }
     }
