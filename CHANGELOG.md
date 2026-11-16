@@ -4,6 +4,25 @@ All notable changes to the CARO Quarto theme. Versions match `_extension.yml`,
 and each release is tagged `v<version>`. Sites carry a committed copy of a
 release; see the README's *Maintaining* section.
 
+## 1.9.0
+
+Requires Quarto 1.11 or later, the fleet's new pin.
+
+- **One skip link, Quarto's.** Quarto 1.11 renders its own skip link first in
+  `<body>`, in the page's language ("Pular para o conteúdo principal" on a
+  pt-BR page), and makes `<main>` focusable. CARO's link would have been a
+  second one, so `skip-link.html` no longer renders a link: it keeps only the
+  fix that moves focus to the content in place on `/dir/index.html` URLs, now
+  for `#quarto-skip-link`. The link keeps CARO's look on focus (UI face, accent
+  border). `caro-post-render.sh` no longer moves a skip link, names the navbar
+  or drops its `role="menu"` (Quarto 1.11 does all three), and stops on a page
+  with two skip links.
+- **One keyboard focus ring everywhere, in the accent.** Quarto 1.11 draws a
+  focus ring on every focusable element; CARO sets its colour to `$accent-warm`
+  (`$focus-ring-outer-color`, 4.0:1 on the cream page) and drops Quarto's inner
+  white halo, so navbar links, buttons and form controls now show the same
+  terracotta ring as links. Under increased contrast every ring is 3px.
+
 ## 1.8.0
 
 - **The skip link and the new-tab cue speak the page's language.** On a page

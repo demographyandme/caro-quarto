@@ -7,15 +7,12 @@
 #
 # Idempotent: a second run leaves every file byte-identical. Portable to macOS
 # (bash 3.2, BSD find) and Linux: all edits are perl. A page it cannot read the
-# way it expects (two skip links, no single <body>) stops the run with an error
+# way it expects (two skip links) stops the run with an error
 # instead of being skipped.
 #
-#   - navbar: drop role="menu" from the toggle button (a collapse is not a menu,
-#     axe aria-allowed-role) and name the navbar landmark "Site" (beside the TOC,
-#     axe landmark-unique).
-#   - skip link: Quarto puts include-before-body inside <main>, after the navbar
-#     and the TOC, so skip-link.html skipped nothing. Move it to the first child
-#     of <body> and make <main id="quarto-document-content"> focusable (-1).
+#   - skip link: Quarto (1.11 and later) renders it first in <body> and makes
+#     <main> focusable, and names the navbar landmark; a page with more than one
+#     skip link (an older CARO skip-link.html beside Quarto's) stops the run.
 #   - validity: drop append-hash from <link> and role="link" from navbar
 #     dropdown toggles (Nu HTML checker error and redundant role).
 #   - fonts: fonts/fonts.css becomes the first stylesheet in <head>, after
@@ -43,27 +40,14 @@ FILE: for my $file (@ARGV) {
   my $orig = $html;
   my $fail = sub { print STDERR "caro-post-render: $file: $_[0]\n"; $status = 1; };
 
-  # navbar (the same substitution sites ran as scripts/strip-navbar-menu-role.sh)
-  $html =~ s/(<button class="navbar-toggler[^>]*?) role="menu"/$1/g;
-  $html =~ s/(<nav class="navbar[^"]*")(?![^>]*aria-label)/$1 aria-label="Site"/g;
-
   # append-hash is not an HTML attribute (Nu validator error; no script reads
   # it), and role="link" on an <a href> dropdown toggle repeats its implicit role
   $html =~ s/(<link\b[^>]*?) append-hash="[^"]*"/$1/g;
   $html =~ s{(<a\b[^>]*>)}{ my $t = $1; $t =~ s/ role="link"// if $t =~ /\bclass="[^"]*\bdropdown-toggle\b/; $t }ge;
 
-  # skip link: first child of <body>; its target takes programmatic focus
-  my @skip = ($html =~ /(<a\b[^>]*\bclass="skip-link"[^>]*>.*?<\/a>)/gs);
-  if (@skip > 1) { $fail->(scalar(@skip) . " skip links"); next FILE; }
-  if (@skip == 1) {
-    my $bodies = () = $html =~ /<body\b[^>]*>/g;
-    if ($bodies != 1) { $fail->("skip link but $bodies <body> tags"); next FILE; }
-    my $link = $skip[0];
-    $html =~ s/[ \t]*\Q$link\E\n?//;
-    $html =~ s/(<body\b[^>]*>)\n?/$1\n$link\n/;
-  }
-  $html =~ s{(<main\b[^>]*\bid="quarto-document-content"[^>]*)>}{
-    my $t = $1; $t =~ /\btabindex=/ ? "$t>" : "$t tabindex=\"-1\">" }e;
+  # skip link: Quarto renders one; a second (the link in CARO 1.8 skip-link.html) stops the run
+  my $skips = () = $html =~ /<a\b[^>]*(?:\bclass="skip-link"|\bid="quarto-skip-link")[^>]*>/g;
+  if ($skips > 1) { $fail->("$skips skip links"); next FILE; }
 
   # fonts (Quarto pages only): fonts.css becomes the first stylesheet, preceded
   # by preloads of the core faces, so the woff2 requests start with the HTML

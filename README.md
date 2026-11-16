@@ -40,7 +40,7 @@ format:
       - _extensions/caro-quarto/fonts.html          # empty stub (kept for compat)
       - _extensions/caro-quarto/external-links.html # off-site links → new tab
     include-before-body:
-      - _extensions/caro-quarto/skip-link.html      # WCAG skip-to-content
+      - _extensions/caro-quarto/skip-link.html      # skip link moves focus in place
 ```
 
 Research/visual companions additionally set `body-classes: research-companion`
@@ -50,7 +50,8 @@ iframe auto-resize handshake).
 
 After `quarto render`, run the theme's HTML normalizer over the output (from the
 site's post-render script or CI); it fixes what Quarto's templates emit and SCSS
-cannot, for example the skip link, which Quarto places inside `<main>`:
+cannot (for example `append-hash` on stylesheet links, and scripts that block
+the page), and stops on a page with two skip links:
 
 ```sh
 bash _extensions/caro-quarto/caro-post-render.sh _site

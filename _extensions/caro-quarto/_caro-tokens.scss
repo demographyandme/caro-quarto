@@ -35,6 +35,9 @@ $primary: #8c1d40;
 $secondary: #525252;          // AAA (7.4:1 on cream): secondary/quiet text + faint underlines
 $border-color: #dedad3;
 $accent-warm: #b5654a;        // borders / large / decoration only (4:1) — never small text
+// Quarto (1.11 and later) draws one keyboard focus ring on every focusable
+// element in this colour (WCAG 2.4.13: 2px, >=3:1 on the cream page; 4.0:1).
+$focus-ring-outer-color: $accent-warm;
 $accent-warm-text: #84402c;   // AAA warm (7.2:1) for small warm text (e.g. card-link hover)
 
 // Literata's tall x-height reads optically large — base + leading tuned

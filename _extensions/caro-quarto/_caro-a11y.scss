@@ -22,9 +22,10 @@
   .nav-footer {
     border-color: $secondary;
   }
-  a:focus-visible,
+  :focus-visible,
   .btn:focus-visible,
-  .skip-link:focus,
+  .nav-link:focus-visible,
+  #quarto-skip-link:focus,
   .project-card:focus-visible,
   .media-card:focus-visible {
     outline-width: 3px;

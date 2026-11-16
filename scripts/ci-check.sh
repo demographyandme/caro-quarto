@@ -16,8 +16,8 @@
 #   5. the tokens compile, with Quarto's bundled Sass, without deprecated colour
 #      or global functions (Quarto's render hides Sass warnings);
 #   6. tests/post-render: the HTML normalizer (caro-post-render.sh) matches its
-#      fixtures and is idempotent; on the rendered fixture it puts the skip link
-#      first in <body>.
+#      fixtures, is idempotent and stops on a page with two skip links; the
+#      rendered fixture has Quarto's skip link first in <body>.
 #   7. tests/vendoring: scripts/vendoring.sh accepts only a CARO source, never
 #      mirrors a tree into or out of itself, and keeps the site's theme when a
 #      copy fails;
@@ -28,8 +28,8 @@
 #      every include), quarto renders it, and the output must carry each include,
 #      the theme's compiled rules and the served fonts; tests/viewer-autoresize-check.js
 #      checks in Node that each viewer's visibility message reaches its own iframe,
-#      and tests/lang-strings-check.js that the skip link and new-tab cue follow
-#      the page language;
+#      and tests/lang-strings-check.js that the new-tab cue follows the page
+#      language and that skip-link.html moves focus to the content in place;
 #      tests/external-links-check.js then checks in Chromium which links open a new
 #      tab (CI fails without Playwright, tests/package.json; a local run without it
 #      skips).
@@ -151,17 +151,19 @@ diff -r fonts "$site/fonts" > /dev/null || err "vendoring did not mirror fonts/"
 if (cd "$site" && quarto render --quiet); then
   out="$site/_site"
   must() { grep -q -- "$2" "$out/$1" || err "$1: $3"; }
-  must index.html 'class="skip-link"'               "skip-link.html include missing"
+  must index.html 'id="quarto-skip-link"'           "Quarto's skip link missing (Quarto 1.11 or later renders it)"
+  must index.html 'closest("a#quarto-skip-link")'   "skip-link.html include missing"
   must index.html 'demographyandme\\.com'           "external-links.html include missing"
   must index.html 'site_libs/quarto-nav/'           "external-links.html: site-root lookup (site_libs/quarto-nav/) missing"
   must index.html 'opens in a new tab'              "external-links.html: new-tab cue missing"
-  must links.html 'class="skip-link"'               "links.html (link cases) not rendered"
+  must links.html 'id="quarto-skip-link"'           "links.html (link cases) not rendered"
   must index.html 'caro-viewer-height'              "viewer-autoresize.html include missing"
   must index.html 'href="fonts/fonts.css"'          "fonts/fonts.css not linked"
   must viewer.html 'class="[^"]*research-companion' "body-classes: research-companion not applied"
   bash _extensions/caro-quarto/caro-post-render.sh "$out" || err "caro-post-render.sh failed on the rendered fixture"
-  perl -0777 -ne 'exit !/<body\b[^>]*>\s*<a\b[^>]*class="skip-link"/' "$out/index.html" \
+  perl -0777 -ne 'exit !/<body\b[^>]*>\s*<a\b[^>]*id="quarto-skip-link"/' "$out/index.html" \
     || err "index.html: after caro-post-render.sh the skip link is not the first child of <body>"
+  ! grep -q 'class="skip-link"' "$out/index.html" || err "index.html: a second skip link beside Quarto's"
   preloads=$(grep -o '<link rel="preload" href="[^"]*" as="font"' "$out/index.html" | sed 's/^<link rel="preload" href="//; s/" as="font"$//')
   [[ -n "$preloads" ]] || err "index.html: no font preload after caro-post-render.sh"
   while IFS= read -r f; do
@@ -175,7 +177,10 @@ if (cd "$site" && quarto render --quiet); then
   if [[ -z "$css" || ! -f "$out/$css" ]]; then
     err "compiled bootstrap css not found"
   else
-    grep -q '\.skip-link' "$out/$css" || err "theme rules (.skip-link) missing from compiled css"
+    grep -q '#quarto-skip-link:focus{[^}]*border:1px solid #b5654a' "$out/$css" || err "theme rules (#quarto-skip-link) missing from compiled css"
+    # One focus ring: Quarto's rule in the theme's accent, without Quarto's white halo.
+    grep -q ':focus-visible{outline:2px solid #b5654a' "$out/$css" || err "focus ring is not \$accent-warm (\$focus-ring-outer-color)"
+    grep -q -- '--quarto-focus-ring-shadow: none' "$out/$css" || err "Quarto's inner focus halo is not removed"
     grep -q 'body\.research-companion' "$out/$css" || err "theme rules (body.research-companion) missing from compiled css"
     # The root size is relative, so a reader's browser font-size setting scales every rem.
     grep -q ':root{font-size:[0-9.]*%' "$out/$css" || err "root font-size is not a percentage (\$fs-root must follow the reader's default size)"

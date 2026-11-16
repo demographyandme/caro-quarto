@@ -36,9 +36,10 @@ while IFS= read -r f; do
 done < <(cd "$work" && find . -name input.html -type f)
 
 # A page it cannot read the way it expects must stop the run.
-printf '<body>\n<a href="#x" class="skip-link">a</a>\n<a href="#x" class="skip-link">b</a>\n</body>\n' > "$work/bad.html"
+# Quarto's skip link beside the one CARO 1.8's skip-link.html added.
+printf '<body><a id="quarto-skip-link" class="visually-hidden-focusable" href="#x">a</a>\n<a href="#x" class="skip-link">b</a>\n</body>\n' > "$work/bad.html"
 if bash "$normalizer" "$work" 2>/dev/null; then
-  echo "post-render: a page with two skip links did not fail the run" >&2
+  echo "post-render: a page with two skip links (Quarto's and CARO 1.8's) did not fail the run" >&2
   fail=1
 fi
 

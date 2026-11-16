@@ -129,39 +129,23 @@ a {
   text-underline-offset: 3px;
 }
 
-/* Consistent, visible keyboard focus (shows on keyboard focus only, not mouse).
-   Solid $accent-warm ring keeps >=3:1 against cream/white (WCAG 2.2 SC 2.4.13). */
-a:focus-visible,
-.btn:focus-visible {
-  outline: 2px solid $accent-warm;
-  outline-offset: 2px;
+/* Keyboard focus: Quarto (1.11 and later) draws one ring on every focusable
+   element (navbar links, buttons and form controls included), in
+   $focus-ring-outer-color (_caro-tokens.scss). CARO keeps the ring alone, on the
+   cream page, without Quarto's inner white halo. */
+:root {
+  --quarto-focus-ring-shadow: none;
 }
 
-/* Skip-to-content link: first focusable element on the page; off-screen until
-   it receives keyboard focus, then slides into the top-left. Paired with the
-   skip-link.html before-body include and #quarto-document-content as target.
-   Quarto puts that include inside <main>; caro-post-render.sh moves the link to
-   the start of <body>, which is what makes it the first focusable element. */
-.skip-link {
-  position: absolute;
-  left: 0.5rem;
-  top: -3.5rem;
-  z-index: 1100;
-  background: $body-bg;
-  color: $link-color;
+/* Skip-to-content link: Quarto renders #quarto-skip-link first in <body>, in
+   the page's language, and shows it at the top left on focus; CARO gives it the
+   UI face and the accent border. skip-link.html moves focus in place. */
+#quarto-skip-link:focus {
   font-family: $font-family-sans-serif;
   font-weight: var(--ui-weight);
   padding: 0.5rem 0.9rem;
   border: 1px solid $accent-warm;
   border-radius: 3px;
-}
-.skip-link:focus {
-  top: 0.5rem;
-  outline: 2px solid $accent-warm;
-  outline-offset: 2px;
-}
-#quarto-document-content:focus {
-  outline: none;   /* programmatic focus target for the skip link */
 }
 
 .btn {
@@ -279,7 +263,7 @@ a:focus-visible,
   .navbar,
   .nav-footer,
   #quarto-margin-sidebar,
-  .skip-link,
+  #quarto-skip-link,
   .pub-back-link {
     display: none !important;
   }
